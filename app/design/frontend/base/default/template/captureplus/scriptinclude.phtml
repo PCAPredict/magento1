@@ -30,7 +30,13 @@ if($pcaAccCode) {
                     pca.fire(el, 'change');
                 }
             }
+        });
+        
+        pca.on('ready', function ()
+        {
+            pca.sourceString = 'MagentoExtension-v3.0.0';
         })
+        
     })();
 //]]>
 </script>
