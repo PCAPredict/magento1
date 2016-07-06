@@ -32,9 +32,48 @@ if($pcaAccCode) {
             }
         });
         
+            magento.canLoad = function() {
+            // check to see if we have the form fields                    
+            if (pca
+                && pca.platform
+                && typeof pca.platform.elementExists === 'function' 
+                && (pca.platform.elementExists("billing:street1"))) {
+                    
+                //load pca
+                pca.load();
+            }
+            else {
+                // re-set the timout
+                window.setTimeout(magento.canLoad, 500);
+            }
+        }
+        
+        
+        magento.onload = function(func) {
+            // assign any pre-defined functions on 'window.onload' to a variable
+            var oldOnLoad = window.onload;
+            // if there is not any function hooked to it
+            if (typeof window.onload !== 'function') {
+                // you can hook your function with it
+                window.onload = func
+            } else { // someone already hooked a function
+                window.onload = function () {
+                    // call the function hooked already
+                    oldOnLoad();
+                    // call your awesome function
+                    func();
+                }
+            }
+        }
+
+        //wait for the page to be ready
+        magento.onload(function() {
+            window.setTimeout(magento.canLoad, 500);
+        });
+
         pca.on('ready', function ()
         {
-            pca.sourceString = 'MagentoExtension-v3.0.0';
+            pca.sourceString = 'MagentoExtension-v3.0.2';
         })
         
     })();
