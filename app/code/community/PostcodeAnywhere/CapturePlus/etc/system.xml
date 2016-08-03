@@ -31,7 +31,16 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </account_code>                      
+                        </account_code> 
+                        <custom_code translate="label">
+                          <label>Custom code: </label>
+                          <frontend_type>textarea</frontend_type>
+                          <comment><![CDATA[Paste any custom JavaScript code that you have in here]]></comment>
+                          <sort_order>5</sort_order>
+                          <show_in_default>1</show_in_default>
+                          <show_in_website>1</show_in_website>
+                          <show_in_store>1</show_in_store>
+                        </custom_code>                     
                     </fields>
                 </settings>
             </groups>

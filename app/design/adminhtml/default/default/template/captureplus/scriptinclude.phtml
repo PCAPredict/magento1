@@ -1,5 +1,6 @@
 <?php
 $pcaAccCode = Mage::getStoreConfig('captureplus/settings/account_code');
+$pcaCustomCode = Mage::getStoreConfig('captureplus/settings/custom_code');
 if($pcaAccCode) {
 ?>
 
@@ -74,8 +75,14 @@ if($pcaAccCode) {
 
         pca.on('ready', function ()
         {
-            pca.sourceString = 'MagentoExtension-v3.0.2';
+            pca.sourceString = 'MagentoExtension-v3.0.3';
         })
+
+            <?php
+    if($pcaCustomCode) {
+        echo $pcaCustomCode;
+    }
+    ?>
         
     })();
 //]]>
