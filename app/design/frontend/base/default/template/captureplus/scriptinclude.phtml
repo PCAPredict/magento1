@@ -73,8 +73,12 @@ if($pcaAccCode) {
 
         pca.on('ready', function ()
         {
-            pca.sourceString = 'MagentoExtension-v3.0.3';
+            pca.sourceString = 'MagentoExtension-v3.0.4';
         })
+
+        document.getElementById("onepage-guest-register-button").addEventListener("click", function() {
+            pca.load();
+        });
         
     <?php
     if($pcaCustomCode) {
