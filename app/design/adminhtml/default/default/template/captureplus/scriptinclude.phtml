@@ -20,10 +20,6 @@ if($pcaAccCode) {
      var capturePlusFields = [];
       
       pca.on('data', function(source, key, address, variations) {
-            console.log(source);
-            console.log(key);
-            console.log(address);
-            console.log(variations);
             
             for (var i = 0; i < capturePlusFields.length; i++) {
                 var el = document.getElementById(capturePlusFields[i].element);
@@ -75,7 +71,7 @@ if($pcaAccCode) {
 
         pca.on('ready', function ()
         {
-            pca.sourceString = 'MagentoExtension-v3.0.4';
+            pca.sourceString = 'MagentoExtension-v3.0.5';
         })
 
             <?php
