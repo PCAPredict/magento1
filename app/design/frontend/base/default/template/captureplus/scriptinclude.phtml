@@ -72,9 +72,8 @@ if($pcaAccCode) {
             pca.sourceString = 'MagentoExtension-v3.0.6';
         })
 
-
         var registerButton = document.getElementById("onepage-guest-register-button");
-        if(registerButton !== null) {
+        if (registerButton) {
             registerButton.addEventListener("click", function() {
                 pca.load();
             });
