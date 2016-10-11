@@ -36,11 +36,20 @@
                           <label>Custom code: </label>
                           <frontend_type>textarea</frontend_type>
                           <comment><![CDATA[Paste any custom JavaScript code that you have in here]]></comment>
-                          <sort_order>5</sort_order>
+                          <sort_order>2</sort_order>
                           <show_in_default>1</show_in_default>
                           <show_in_website>1</show_in_website>
                           <show_in_store>1</show_in_store>
-                        </custom_code>                     
+                        </custom_code>
+                        <custom_mappings translate="label">
+                            <label>Custom mappings: </label>
+                            <frontend_type>textarea</frontend_type>
+                            <comment><![CDATA[Paste any custom field mappings that you have in here]]></comment>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </custom_mappings>                    
                     </fields>
                 </settings>
             </groups>
