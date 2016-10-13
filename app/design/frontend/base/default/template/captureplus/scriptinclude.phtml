@@ -21,12 +21,18 @@ if($pcaAccCode) {
      var capturePlusFields = [];
       
       pca.on('data', function(source, key, address, variations) {
-            
-            for (var i = 0; i < capturePlusFields.length; i++) {
-                var el = document.getElementById(capturePlusFields[i].element);
-                if (el) {
-                    pca.fire(el, 'change');
-                }
+            switch(source) {
+                case 'address':
+                    for (var i = 0; i < capturePlusFields.length; i++) {
+                        var el = document.getElementById(capturePlusFields[i].element);
+                        if (el) {
+                            pca.fire(el, 'change');
+                        }
+                    }
+                break;
+
+                default: 
+                    break;
             }
         });
         
@@ -73,14 +79,25 @@ if($pcaAccCode) {
             pca.sourceString = 'MagentoExtension-v3.0.7';
         });
 
-        var phoneFieldCall = 0; 
-        var emailFieldCall = 0;  
+                pca.on('restrictions', function (service, key, restrictions) {
+            switch (service) {
+                case 'capture+': 
+                //case 'mobilevalidation':
+                //case 'emailvalidation': 
+                    restrictions.length = 0;
+                    break;
+                default: 
+                    break;
+            }
+            
+        });
+
 
         pca.on("fields", function(service, id, fields){       
             
             var capturePlusMappings = [];
-             var phoneMappings = [];
-             var emailMappings = [];
+             //var phoneMappings = [];
+             //var emailMappings = [];
             <?php echo $pcaMappings; ?>
 
             switch (service) {
@@ -90,65 +107,47 @@ if($pcaAccCode) {
 
                     var newCPMappings = [];
                     for (var i = 0; i < capturePlusMappings.length; i++) {
-                        var dynamicCPFields = document.getElementsByName(capturePlusMappings[i].element);
-                        if (dynamicCPFields && dynamicCPFields.length) {
-                            for (var cntr = 0; cntr < dynamicCPFields.length; cntr++) {
-                                if (dynamicCPFields[cntr].id) {
-                                    var newMapping = {};
-                                    newMapping.field = capturePlusMappings[i].field;
-                                    newMapping.mode = capturePlusMappings[i].mode;
-                                    newMapping.element = dynamicCPFields[cntr].id;
-                                    newCPMappings.push(newMapping);
-                                }
-                            }
-                        }
-                        else {
-                            newCPMappings.push(capturePlusMappings[i]);
+                        newCPMappings.push(capturePlusMappings[i]);
+                    }
+                }
+                fields.length = 0;
+                for (var i = 0; i < newCPMappings.length; i++) {
+                    fields.push(newCPMappings[i]);
+                    var fieldAlreadyFound = false;
+                    for (var ii = 0; ii < capturePlusFields.length; ii++) {
+                        if (capturePlusFields[ii].element === newCPMappings[i].element) {
+                            fieldAlreadyFound = true;
+                            break;
                         }
                     }
-                    fields.length = 0;
-                    for (var i = 0; i < newCPMappings.length; i++) {
-                        fields.push(newCPMappings[i]);
-                        var fieldAlreadyFound = false;
-                        for (var ii = 0; ii < capturePlusFields.length; ii++) {
-                            if (capturePlusFields[ii].element === newCPMappings[i].element) {
-                                fieldAlreadyFound = true;
-                                break;
-                            }
-                        }
-                        if (fieldAlreadyFound != true) 
-                            capturePlusFields.push(newCPMappings[i]);
-                    } 
-                }
+                    if (fieldAlreadyFound != true) 
+                        capturePlusFields.push(newCPMappings[i]);
+                } 
                 break;
 
-                    case 'mobilevalidation':
-                    if (phoneMappings.length > 0) {
-                        var phoneFieldCount = fields.length;                
-                        var newMobileMappings = [];                    
-                        for (var i = 0; i < phoneMappings.length; i++) {
-                            var dynamicMobFields = document.getElementsByName(phoneMappings[i].element);
-                            if (dynamicMobFields && dynamicMobFields.length) {
-                                if (dynamicMobFields.length > phoneFieldCall) {
-                                    if (magento.isElementVisible(dynamicMobFields[phoneFieldCall]) && dynamicMobFields[phoneFieldCall].id) {
-                                        var newMapping = {};
-                                        newMapping.field = phoneMappings[i].field;
-                                        newMapping.mode = phoneMappings[i].mode;
-                                        newMapping.element = dynamicMobFields[phoneFieldCall].id;
-                                        newMobileMappings.push(newMapping);
-                                    }
-                                }
-                            }
-                        }             
-                        if (newMobileMappings.length > 0) {
-                            fields.length = 0;
-                            for (var i = 0; i < newMobileMappings.length; i++) {
-                                fields.push(newMobileMappings[i]);
-                            }
-                        }                     
-                        phoneFieldCall++;
-                    }
-                    break;
+                    // case 'mobilevalidation':
+                    // if (phoneMappings.length > 0) {
+                    //     fields.length = 0;     
+                    //     var newMobileMappings = [];                    
+                    //     for (var i = 0; i < phoneMappings.length; i++) {
+                    //         var dynamicMobField = document.getElementById(phoneMappings[i].element);
+                    //         if (dynamicMobField) {
+                    //             var newMapping = {};
+                    //             newMapping.field = phoneMappings[i].field;
+                    //             newMapping.mode = phoneMappings[i].mode;
+                    //             newMapping.element = dynamicMobField.id;
+                    //             newMobileMappings.push(newMapping);
+                    //         }
+                    //     }             
+                    //     if (newMobileMappings.length > 0) {
+                    //         phoneMappings = [];
+                    //         for (var i = 0; i < newMobileMappings.length; i++) {
+                    //             fields.push(newMobileMappings[i]);
+                    //             phoneMappings.push(newMobileMappings[i]);
+                    //         }
+                    //     }                     
+                    // }
+                    // break;
 
                 default: 
                     break;
