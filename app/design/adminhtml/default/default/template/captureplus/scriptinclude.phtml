@@ -1,6 +1,7 @@
 <?php
 $pcaAccCode = Mage::getStoreConfig('captureplus/settings/account_code');
 $pcaCustomCode = Mage::getStoreConfig('captureplus/settings/custom_code');
+$pcaMappings = Mage::getStoreConfig('captureplus/settings/custom_mappings');
 if($pcaAccCode) {
 ?>
 
@@ -13,11 +14,117 @@ if($pcaAccCode) {
     })(window, document, "pca", "//<?php echo $pcaAccCode; ?>.pcapredict.com/js/sensor.js");
 
 //<![CDATA[
+
+      var shippingAddress = [];
+     var billingAddress = [];
+     var custInfoAddress = [];
+     var editOrderAddress = [];
+
     (function() {
      var magento = pca.magento = pca.magento || {};
      
      magento.controls = magento.controls || [];
      var capturePlusFields = [];
+
+     document.addEventListener('click', function(e) {
+
+        var backendShippingAddress = [];
+        var backendBillingAddress = [];
+        var backendCustomerInfoPartial = [];
+        var backendEditOrderAddress = []
+        <?php echo $pcaMappings; ?>
+
+
+         if (e.target.id.includes('shipping')) {
+
+             var contains = false;
+
+             for (var i = 0; i < backendShippingAddress.length; i++) {
+                 if (backendShippingAddress[i].element === e.target.id) {
+                     contains = true;
+                     break;
+                 }
+             }
+
+             if(contains) {
+                 shippingAddress = backendShippingAddress;
+                 billingAddress.length = 0;
+                 custInfoAddress.length = 0;
+                 editOrderAddress.length = 0;
+                 pca.load();
+             }
+
+         }
+
+         else if (e.target.id.includes('billing')) {
+
+             var contains = false;
+
+             for (var i = 0; i < backendBillingAddress.length; i++) {
+                 if (backendBillingAddress[i].element === e.target.id) {
+                     contains = true;
+                     break;
+                 }
+             }
+
+             if(contains) {
+                 billingAddress = backendBillingAddress;
+                 shippingAddress.length = 0;
+                 custInfoAddress.length = 0;
+                 editOrderAddress.length = 0;
+                 pca.load();
+             }
+         }
+
+         else if (e.target.id.includes('_item')) {
+
+             var contains = false;
+
+             for (var i = 0; i < backendCustomerInfoPartial.length; i++) {
+                 if (e.target.id.includes(backendCustomerInfoPartial[i].element)) {
+                     contains = true;
+                     break;
+                 }
+             }
+
+             if (contains) {
+
+                 var n = e.target.id[5];
+
+                 for (var i = 0; i < backendCustomerInfoPartial.length; i++) {
+                     var tempField = backendCustomerInfoPartial[i].element;
+                     backendCustomerInfoPartial[i].element = "_item" + n + tempField;
+                 }
+
+                 custInfoAddress = backendCustomerInfoPartial;
+                 billingAddress.length = 0;
+                 shippingAddress.length = 0;
+                 editOrderAddress.length = 0;
+                 pca.load();
+             }
+         }
+
+         else {
+
+             var contains = false;
+
+             for (var i = 0; i < backendEditOrderAddress.length; i++) {
+                 if (backendEditOrderAddress[i].element === e.target.id) {
+                     contains = true;
+                     break;
+                 }
+             }
+
+             if (contains) {
+                editOrderAddress = backendEditOrderAddress;
+                billingAddress.length = 0;
+                shippingAddress.length = 0;
+                custInfoAddress.length = 0;
+                pca.load();
+             }
+         }
+        
+     }, false);
       
       pca.on('data', function(source, key, address, variations) {
             
@@ -72,7 +179,63 @@ if($pcaAccCode) {
         pca.on('ready', function ()
         {
             pca.sourceString = 'MagentoExtension-v3.0.7';
-        })
+        });
+
+         pca.on('restrictions', function (service, key, restrictions) {
+            switch (service) {
+                case 'capture+': 
+                    restrictions.length = 0;
+                    break;
+                default: 
+                    break;
+            }
+            
+        });
+
+           pca.on("fields", function(service, id, fields) {       
+            
+            var mappings = [];
+
+            if (shippingAddress.length > 0) {
+                mappings = shippingAddress;
+            } else if (billingAddress.length > 0) {
+                mappings = billingAddress;
+            } else if (custInfoAddress.length > 0) {
+                mappings = custInfoAddress;
+            } else if (editOrderAddress.length > 0) {
+                mappings = editOrderAddress;
+            }
+
+            switch (service) {
+                case 'capture+':
+
+                var newCPMappings = [];
+
+                if (mappings.length > 0) {
+                    for (var i = 0; i < mappings.length; i++) {
+                        newCPMappings.push(mappings[i]);
+                    }
+                }
+                fields.length = 0;
+                for (var i = 0; i < newCPMappings.length; i++) {
+                    fields.push(newCPMappings[i]);
+                    var fieldAlreadyFound = false;
+                    for (var ii = 0; ii < capturePlusFields.length; ii++) {
+                        if (capturePlusFields[ii].element === newCPMappings[i].element) {
+                            fieldAlreadyFound = true;
+                            break;
+                        }
+                    }
+                    if (fieldAlreadyFound != true) 
+                        capturePlusFields.push(newCPMappings[i]);
+                } 
+                break;
+
+                default: 
+                    break;
+            }
+        });
+
 
             <?php
     if($pcaCustomCode) {
