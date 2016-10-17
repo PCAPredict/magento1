@@ -82,8 +82,7 @@ if($pcaAccCode) {
                 pca.on('restrictions', function (service, key, restrictions) {
             switch (service) {
                 case 'capture+': 
-                //case 'mobilevalidation':
-                //case 'emailvalidation': 
+
                     restrictions.length = 0;
                     break;
                 default: 
@@ -96,16 +95,15 @@ if($pcaAccCode) {
         pca.on("fields", function(service, id, fields) {       
             
             var capturePlusMappings = [];
-             //var phoneMappings = [];
-             //var emailMappings = [];
+
             <?php echo $pcaMappings; ?>
 
             switch (service) {
                 case 'capture+':
 
+                var newCPMappings = [];
+                
                 if (capturePlusMappings.length > 0) {
-
-                    var newCPMappings = [];
                     for (var i = 0; i < capturePlusMappings.length; i++) {
                         newCPMappings.push(capturePlusMappings[i]);
                     }
@@ -124,30 +122,6 @@ if($pcaAccCode) {
                         capturePlusFields.push(newCPMappings[i]);
                 } 
                 break;
-
-                    // case 'mobilevalidation':
-                    // if (phoneMappings.length > 0) {
-                    //     fields.length = 0;     
-                    //     var newMobileMappings = [];                    
-                    //     for (var i = 0; i < phoneMappings.length; i++) {
-                    //         var dynamicMobField = document.getElementById(phoneMappings[i].element);
-                    //         if (dynamicMobField) {
-                    //             var newMapping = {};
-                    //             newMapping.field = phoneMappings[i].field;
-                    //             newMapping.mode = phoneMappings[i].mode;
-                    //             newMapping.element = dynamicMobField.id;
-                    //             newMobileMappings.push(newMapping);
-                    //         }
-                    //     }             
-                    //     if (newMobileMappings.length > 0) {
-                    //         phoneMappings = [];
-                    //         for (var i = 0; i < newMobileMappings.length; i++) {
-                    //             fields.push(newMobileMappings[i]);
-                    //             phoneMappings.push(newMobileMappings[i]);
-                    //         }
-                    //     }                     
-                    // }
-                    // break;
 
                 default: 
                     break;
