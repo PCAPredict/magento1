@@ -20,19 +20,26 @@ if($pcaAccCode) {
      magento.controls = magento.controls || [];
      var capturePlusFields = [];
       
-      pca.on('data', function(source, key, address, variations) {
-            switch(source) {
-                case 'address':
-                    for (var i = 0; i < capturePlusFields.length; i++) {
-                        var el = document.getElementById(capturePlusFields[i].element);
-                        if (el) {
-                            pca.fire(el, 'change');
-                        }
+        pca.on('data', function(source, key, address, variations) {
+            var provNameElId = "";
+            for (var i = 0; i < capturePlusFields.length; i++) {                
+                var el = document.getElementById(capturePlusFields[i].element);
+                if (el) {
+                    if (capturePlusFields[i].field === "{ProvinceName}") {
+                        provNameElId = el.id;
                     }
-                break;
-
-                default: 
-                    break;
+                    pca.fire(el, 'change');
+                }
+            }
+            var el = document.getElementById(provNameElId);
+            if (el) {
+                for (var j = 0; j < el.options.length; j++) {
+                    if (el.options[j].text === address.ProvinceName) {
+                        el.selectedIndex = j;
+                        break;
+                    }
+                }
+                pca.fire(el, 'change');
             }
         });
         
