@@ -26,7 +26,7 @@ if($pcaAccCode) {
      magento.controls = magento.controls || [];
      var capturePlusFields = [];
 
-     document.addEventListener('click', function(e) {
+     document.addEventListener('focus', function(e) {
 
         var backendShippingAddress = [];
         var backendBillingAddress = [];
@@ -124,7 +124,7 @@ if($pcaAccCode) {
              }
          }
         
-     }, false);
+     }, true);
       
       pca.on('data', function(source, key, address, variations) {
             
@@ -178,7 +178,7 @@ if($pcaAccCode) {
 
         pca.on('ready', function ()
         {
-            pca.sourceString = 'MagentoExtension-v3.0.7';
+            pca.sourceString = 'MagentoExtension-v3.0.8';
         });
 
          pca.on('restrictions', function (service, key, restrictions) {
