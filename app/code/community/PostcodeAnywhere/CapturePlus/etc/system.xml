@@ -42,7 +42,7 @@
                           <show_in_website>1</show_in_website>
                           <show_in_store>1</show_in_store>
                         </custom_code>
-                        <custom_mappings translate="label">
+                        <custom_mappings2 translate="label">
                             <label>Custom mappings: </label>
                             <frontend_type>textarea</frontend_type>
                             <comment><![CDATA[Paste any custom field mappings that you have in here]]></comment>
@@ -50,7 +50,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </custom_mappings>                    
+                        </custom_mappings2>                    
                     </fields>
                 </settings>
             </groups>

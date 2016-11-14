@@ -1,7 +1,7 @@
 <?php
 $pcaAccCode = Mage::getStoreConfig('captureplus/settings/account_code');
 $pcaCustomCode = Mage::getStoreConfig('captureplus/settings/custom_code');
-$pcaMappings = Mage::getStoreConfig('captureplus/settings/custom_mappings');
+$pcaMappings = Mage::getStoreConfig('captureplus/settings/custom_mappings2');
 if($pcaAccCode) {
 ?>
 
@@ -14,11 +14,59 @@ if($pcaAccCode) {
     })(window, document, "pca", "//<?php echo $pcaAccCode; ?>.pcapredict.com/js/sensor.js");
 
 //<![CDATA[
+
+    var shippingAddress =[];
+    var billingAddress = [];
+
   (function() {
      var magento = pca.magento = pca.magento || {};
 
      magento.controls = magento.controls || [];
      var capturePlusFields = [];
+
+     document.addEventListener('focus', function(e) {
+        var checkoutBillingMappings = [];
+        var checkoutShippingMappings = [];
+        <?php echo $pcaMappings; ?>
+
+        if (e.target.id.includes('shipping')) {
+
+            var contains = false;
+
+            for (var i = 0; i < checkoutShippingMappings.length; i++) {
+                if (checkoutShippingMappings[i].element === e.target.id) {
+                    contains = true;
+                    break;
+                }
+            }
+
+            if (contains) {
+                shippingAddress = checkoutShippingMappings;
+                billingAddress.length = 0;
+                pca.load();
+            } 
+
+        }
+
+        else if (e.target.id.includes('billing')) {
+
+            var contains = false;
+
+            for (var i = 0; i < checkoutBillingMappings.length; i++) {
+                if (checkoutBillingMappings[i].element === e.target.id) {
+                    contains = true;
+                    break;
+                }
+            }
+
+            if (contains) {
+                billingAddress = checkoutBillingMappings;
+                shippingAddress.length = 0;
+                pca.load();
+            }
+        }
+
+     }, true);
       
         pca.on('data', function(source, key, address, variations) {
             var provNameElId = [];
@@ -87,7 +135,7 @@ if($pcaAccCode) {
 
         pca.on('ready', function ()
         {
-            pca.sourceString = 'MagentoExtension-v3.0.8';
+            pca.sourceString = 'MagentoExtension-v3.0.9';
         });
 
                 pca.on('restrictions', function (service, key, restrictions) {
@@ -107,7 +155,11 @@ if($pcaAccCode) {
             
             var capturePlusMappings = [];
 
-            <?php echo $pcaMappings; ?>
+            if (shippingAddress.length > 0) {
+                capturePlusMappings = shippingAddress;
+            } else if (billingAddress.length > 0) {
+                capturePlusMappings = billingAddress;
+            }
 
             switch (service) {
                 case 'capture+':
