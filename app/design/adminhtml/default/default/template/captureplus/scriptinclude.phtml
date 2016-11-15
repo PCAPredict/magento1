@@ -20,6 +20,10 @@ if($pcaAccCode) {
      var custInfoAddress = [];
      var editOrderAddress = [];
 
+     var supressCountry = false;
+     var shippingFirstTime = true;
+     var billingFirstTime = true;
+
     (function() {
      var magento = pca.magento = pca.magento || {};
      
@@ -47,11 +51,18 @@ if($pcaAccCode) {
              }
 
              if(contains) {
+
+                 if (shippingFirstTime) {
+                 supressCountry = false;
+                }
+                shippingFirstTime = false;
+
                  shippingAddress = backendShippingAddress;
                  billingAddress.length = 0;
                  custInfoAddress.length = 0;
                  editOrderAddress.length = 0;
                  pca.load();
+                 supressCountry = true;
              }
 
          }
@@ -68,11 +79,17 @@ if($pcaAccCode) {
              }
 
              if(contains) {
+                 if (billingFirstTime) {
+                 supressCountry = false;
+                }
+                billingFirstTime = false;
+
                  billingAddress = backendBillingAddress;
                  shippingAddress.length = 0;
                  custInfoAddress.length = 0;
                  editOrderAddress.length = 0;
                  pca.load();
+                 supressCountry = true;
              }
          }
 
@@ -101,6 +118,7 @@ if($pcaAccCode) {
                  shippingAddress.length = 0;
                  editOrderAddress.length = 0;
                  pca.load();
+                 supressCountry = true;
              }
          }
 
@@ -178,7 +196,7 @@ if($pcaAccCode) {
 
         pca.on('ready', function ()
         {
-            pca.sourceString = 'MagentoExtension-v3.0.9';
+            pca.sourceString = 'MagentoExtension-v3.1.0.0';
         });
 
          pca.on('restrictions', function (service, key, restrictions) {
@@ -190,6 +208,14 @@ if($pcaAccCode) {
                     break;
             }
             
+        });
+
+        pca.on("options", function(service, id, options) {
+            if (supressCountry) {
+                options.setCountryByIP = false;
+            } else {
+                options.setCountryByIP = true;
+            }
         });
 
            pca.on("fields", function(service, id, fields) {       

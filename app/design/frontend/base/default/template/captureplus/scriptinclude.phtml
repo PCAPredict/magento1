@@ -18,6 +18,10 @@ if($pcaAccCode) {
     var shippingAddress =[];
     var billingAddress = [];
 
+    var supressCountry = false;
+    var shippingFirstTime = true;
+    var billingFirstTime = true;
+
   (function() {
      var magento = pca.magento = pca.magento || {};
 
@@ -41,9 +45,15 @@ if($pcaAccCode) {
             }
 
             if (contains) {
+                if (shippingFirstTime) {
+                 supressCountry = false;
+                }
+                shippingFirstTime = false;
+
                 shippingAddress = checkoutShippingMappings;
                 billingAddress.length = 0;
                 pca.load();
+                supressCountry = true;
             } 
 
         }
@@ -60,9 +70,15 @@ if($pcaAccCode) {
             }
 
             if (contains) {
+                if (billingFirstTime) {
+                 supressCountry = false;
+                }
+                billingFirstTime = false;
+
                 billingAddress = checkoutBillingMappings;
                 shippingAddress.length = 0;
                 pca.load();
+                supressCountry = true;
             }
         }
 
@@ -135,7 +151,7 @@ if($pcaAccCode) {
 
         pca.on('ready', function ()
         {
-            pca.sourceString = 'MagentoExtension-v3.0.9';
+            pca.sourceString = 'MagentoExtension-v3.1.0.0';
         });
 
                 pca.on('restrictions', function (service, key, restrictions) {
@@ -148,6 +164,14 @@ if($pcaAccCode) {
                     break;
             }
             
+        });
+
+        pca.on("options", function(service, id, options) {
+            if (supressCountry) {
+                options.setCountryByIP = false;
+            } else {
+                options.setCountryByIP = true;
+            }
         });
 
 
