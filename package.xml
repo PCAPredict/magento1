@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>UK_and_International_Address_AutoFill_from_Postcode_Anywhere</name>
-    <version>3.1.0.1</version>
+    <version>3.1.0.2</version>
     <stability>stable</stability>
     <license>GNU General Public License (GPL)</license>
     <channel>community</channel>
