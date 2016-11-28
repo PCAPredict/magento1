@@ -169,14 +169,23 @@ if (!String.prototype.includes) {
 
         pca.on('ready', function ()
         {
-            pca.sourceString = 'MagentoExtension-v3.1.0.2';
+            pca.sourceString = 'MagentoExtension-v3.1.0.3';
         });
 
-                pca.on('restrictions', function (service, key, restrictions) {
+        pca.on('restrictions', function (service, key, restrictions) {
             switch (service) {
                 case 'capture+': 
 
-                    restrictions.length = 0;
+                    var newRestrictions = [];
+
+                    for (var i = 0; i < restrictions.length; i++) {
+                        if (!restrictions[i].Key.startsWith('fieldPresent')) {
+                            newRestrictions.push(restrictions[i]);
+                        }
+                    }
+
+                    restrictions = newRestrictions;
+
                     break;
                 default: 
                     break;
