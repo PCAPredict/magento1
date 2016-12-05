@@ -158,16 +158,42 @@
                 }
             }
         }, true);
-      
-        pca.on('data', function(source, key, address, variations) {
+
+      pca.on('data', function(source, key, address, variations) {
+            var provNameElId = [];
             for (var i = 0; i < capturePlusFields.length; i++) {
+                var firePca = true;               
                 var el = document.getElementById(capturePlusFields[i].element);
                 if (el) {
-                    pca.fire(el, 'change');
+                    if (capturePlusFields[i].field === "{ProvinceName}") {
+                        provNameElId.push(el.id);
+                    }
+                    if (firePca) {
+                        pca.fire(el, 'change');
+                        firePca = false;
+                    }
+                }
+            }
+            if (provNameElId.length > 0) {
+                for (var i = 0; i < provNameElId.length; i++) {
+                    var firePca = true;
+                    var el = document.getElementById(provNameElId[i]);
+                    if (el) {
+                        for (var j = 0; j < el.options.length; j++) {
+                            if (el.options[j].text === address.ProvinceName) {
+                                el.selectedIndex = j;
+                                break;
+                            }
+                        }
+                        if (firePca) {
+                            pca.fire(el, 'change');
+                            firePca = false;
+                        }
+                    }
                 }
             }
         });
-        
+
         magento.canLoad = function() {
             // check to see if we have the form fields                    
             if (pca
@@ -209,7 +235,7 @@
 
         pca.on('ready', function ()
         {
-            pca.sourceString = 'MagentoExtension-v3.1.0.3';
+            pca.sourceString = 'MagentoExtension-v3.1.0.4';
         });
 
          pca.on('restrictions', function (service, key, restrictions) {
