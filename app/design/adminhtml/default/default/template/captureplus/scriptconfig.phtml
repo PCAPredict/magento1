@@ -1,0 +1,313 @@
+<?php
+?>
+
+<script type="text/javascript">
+
+    window.onload = function() {
+        var el = document.getElementById("captureplus_login_license_key");
+        if(el) {
+            hideFields();
+            if(el.value=='') {
+                var feedback = document.getElementById("captureplus_login_feedback");
+                if (feedback) {
+                    feedback.innerHTML = 'You are not logged in';
+                    updateLoginHeader("Log in to PCA Predict");
+                    updateButton("Login");
+                    disableLoginFields(false);
+                    notLoggedIn();
+                }
+            } else {
+                var feedback = document.getElementById("captureplus_login_feedback");
+                if (feedback) {
+                    feedback.innerHTML = 'You are logged in';
+                    updateLoginHeader("Your PCA Predict Account");
+                    updateButton("Logout");
+                    disableLoginFields(true);
+                    loggedIn();
+                    //getKeySettings();
+                }
+            }
+        }
+    }
+
+    function hideFields() {
+        var el2 = document.getElementById("row_captureplus_login_license_key");
+        if(el2) {
+            el2.style.visibility = "hidden";
+        }
+        var el3 = document.getElementById("row_captureplus_login_mercury_token");
+        if(el3) {
+            el3.style.visibility = "hidden";
+        }
+    }
+
+    function notLoggedIn() {
+        //Expand login and collapse configure
+        if (getCollapsedState("captureplus_login") == 1) {
+            Fieldset.toggleCollapse('captureplus_login', 'http://tmt2/index.php/admin/system_config/state/');
+        }
+        if (getCollapsedState("captureplus_settings") == 0) {
+            Fieldset.toggleCollapse('captureplus_settings', 'http://tmt2/index.php/admin/system_config/state/');
+        }
+
+        //fetchPlanInfo(false);
+    }
+
+    function loggedIn() {
+        //Collapse login and expand configure
+        if (getCollapsedState("captureplus_login") == 0) {
+            Fieldset.toggleCollapse('captureplus_login', 'http://tmt2/index.php/admin/system_config/state/');
+        }
+        if (getCollapsedState("captureplus_settings") == 1) {
+            Fieldset.toggleCollapse('captureplus_settings', 'http://tmt2/index.php/admin/system_config/state/');
+        }
+
+        //fetchPlanInfo(true);
+    }
+
+    // function fetchPlanInfo(loggedIn) {
+    //     if(loggedIn) {
+    //         var auth = getAuth();
+    //         body = {};
+    //         fetch('https://app_api.pcapredict.com/api/accountplan', {
+    //             method: 'POST',
+    //             body: JSON.stringify(body),
+    //             headers: new Headers({
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': 'Basic ' + auth
+    //             })
+    //         }).then(function(response){
+    //             //get json
+    //             response.json().then(function(jsonObject){
+    //                 updatePlanInfoText(true, jsonObject);
+    //             }, function(){ /*TODO: Deal with error*/ });
+    //         }, function(){ /*TODO: Deal with error*/ })
+    //     }
+    //     else {
+    //         updatePlanInfoText(false, null);
+    //     }
+    // }
+
+    // function updatePlanInfoText(loggedIn, info) {
+    //     var el = document.getElementById("postcodeanywhere_planinfo");
+    //     if(el) {
+    //         if(loggedIn) {
+    //             var objDate = new Date(info.currentPlanRefreshDate);
+
+    //             var creditInfo = '';
+    //             if(info.currentPlanName == 'Free') {
+    //                 creditInfo = info.currentPlanCredits + ' US ';
+    //             } else {
+    //                 creditInfo = info.currentPlanCredits;
+    //             }
+                
+    //             el.innerHTML = '<p>You\'re currently on the ' + info.currentPlanName + ' plan, and get ' + creditInfo + ' address credits every ' + info.currentPlanPeriod +'.</p><p>Your credits will be refreshed on ' + formatDate(objDate) +'</p><p>Need more credits? <a href="https://www.pcapredict.com/" target="_blank">Visit our website for infomation on our paid plans</a></p>'
+    //         } else {
+    //             el.innerHTML = 'Please log into your PCA Predict account within Magento to view information about your plan.';
+    //         }
+    //     }
+    // }
+
+    function updateLoginHeader(title) {
+        var head = document.getElementById("captureplus_login-head");
+        if(head) {
+            head.innerHTML = title;
+        }
+    }
+
+    function updateButton(title) {
+        var btn = document.getElementById("postcodeanywherecaptureplus_button");
+        if(btn) {
+            btn.title = title;
+            btn.disabled = false;
+            btn.innerHTML = "<span><span><span>" + title + "</span></span></span>";
+        }
+    }
+
+    function disableLoginFields(disabled) {
+        var username = document.getElementById("captureplus_login_account_code");
+        if (username) {
+            username.disabled = disabled; 
+        }
+
+        var password = document.getElementById("captureplus_login_pca_password");
+        if (password) {
+            password.disabled = disabled;
+        }
+    }
+
+    function getCollapsedState(containerId) {
+        var collapsed = 0;
+
+        if ($(containerId + '-state')) {
+            collapsed = $(containerId + '-state').value == 1 ? 0 : 1;
+        } else {
+            collapsed = $(containerId + '-head').collapsed;
+        }
+
+        return collapsed;
+    }
+
+    function getAuth() {
+        var txtAccountCode = document.getElementById("captureplus_login_account_code");
+        if(txtAccountCode) {
+            var txtToken = document.getElementById("captureplus_login_mercury_token");
+            if(txtToken) {
+                return btoa(txtAccountCode.value + ':' + txtToken.value);
+            }
+        }
+    }
+
+    // function getKeySettings() {
+
+    //     var txtKey = document.getElementById('captureplus_login_license_key');
+    //     if(txtKey) {
+    //         var key = txtKey.value;
+    //         var auth = getAuth();
+    //         var body = {
+    //         "key": key
+    //         };
+    //         fetch('https://app_api.pcapredict.com/api/GetLicenseDetails', {
+    //             method: 'POST',
+    //             body: JSON.stringify(body),
+    //             headers: new Headers({
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': 'Basic ' + auth
+    //             })
+    //         }).then(function(response){
+    //             //get json
+    //             response.json().then(function(jsonObject){
+    //                 displayKeySettings(jsonObject);
+    //             }, function(){ /*TODO: Deal with error*/ });
+    //         }, function(){ /*TODO: Deal with error*/ })
+    //     }
+    // }
+
+    // function displayKeySettings(keySettings) {
+    //     var dailyLimitMatch = false;
+    //     var drpDailyLimit = document.getElementById("addresslookup_options_configure_daily_limit");
+    //     if (drpDailyLimit) {
+    //         for (var i = 0; i < drpDailyLimit.length; i++) {
+    //             if (keySettings.dailyLimit == drpDailyLimit.options[i].value) {
+    //                 dailyLimitMatch = true;
+    //                 drpDailyLimit.value = keySettings.dailyLimit;
+    //                 break;
+    //             }
+    //         }
+
+    //         if (!dailyLimitMatch) {
+    //             drpDailyLimit.value = 2000;
+    //         }
+    //     }
+
+    //     var userLimitMatch = false;
+    //     var drpUserLimit = document.getElementById("addresslookup_options_configure_user_limit");
+    //     if (drpUserLimit) {
+    //        for (var i = 0; i < drpUserLimit.length; i++) {
+    //            if (keySettings.userLimit == drpUserLimit.options[i].value) {
+    //                userLimitMatch = true;
+    //                drpUserLimit.value = keySettings.userLimit;
+    //                break;
+    //            }
+    //        } 
+
+    //        if(!userLimitMatch) {
+    //            drpUserLimit.value = 0;
+    //        }
+    //     }
+
+    //     var urls = '';
+    //     for (var i = 0; i < keySettings.urlRestrictions.length; i++) {
+    //         urls = urls + keySettings.urlRestrictions[i] + '\n';
+    //     }
+
+    //     var txtUrlRestrictions = document.getElementById("addresslookup_options_configure_url_restrictions");
+    //     if (txtUrlRestrictions) {
+    //         txtUrlRestrictions.value = urls;
+    //     }
+    // }
+
+    // function updateKeySettings() {
+    //     var auth = getAuth();
+    //     var body = buildKeyUpdateBody();
+    //     fetch('https://app_api.pcapredict.com/api/SetLicenseDetails', {
+    //         method: 'POST',
+    //         body: JSON.stringify(body),
+    //         headers: new Headers({
+    //             'Content-Type': 'application/json',
+    //             'Authorization': 'Basic ' + auth
+    //         })
+    //     }).then(function(response){
+    //         //get json
+    //         response.json().then(function(jsonObject){
+    //             displayKeySettings(jsonObject);
+    //         }, function(){ /*TODO: Deal with error*/ });
+    //     }, function(){ /*TODO: Deal with error*/ })
+    // }
+
+    // function buildKeyUpdateBody() {
+        
+    //     var txtKey = document.getElementById('addresslookup_options_login_license_key');
+    //     if(txtKey) {
+    //         var key = txtKey.value;
+    //     }
+
+    //     var drpDailyLimit = document.getElementById("addresslookup_options_configure_daily_limit");
+    //     if (drpDailyLimit) {
+    //         var dailyLimit =  drpDailyLimit.value;
+    //     }
+
+    //     var drpUserLimit = document.getElementById("addresslookup_options_configure_user_limit");
+    //     if (drpUserLimit) {
+    //         var userLimit = drpUserLimit.value;
+    //     }
+
+    //     var txtUrlRestrictions = document.getElementById("addresslookup_options_configure_url_restrictions");
+    //     if (txtUrlRestrictions) {
+    //         var rawUrls = txtUrlRestrictions.value.split('\n');;
+    //     }      
+
+    //     var urls = [];
+
+    //     for(var i = 0; i < rawUrls.length; i++) {
+    //         if (rawUrls[i].length > 0) {
+    //             urls.push(rawUrls[i]);
+    //         }
+    //     }
+
+    //     var body = {
+    //         "Key": key,
+    //         "DailyLimit": parseInt(dailyLimit),
+    //         "UserLimit": parseInt(userLimit),
+    //         "UrlRestrictions": urls
+    //     }
+
+    //     return body;
+    // }
+
+    // var reload = configForm.submit;
+    // configForm.submit = function() {
+    // var el = document.getElementById("captureplus_login_account_code");
+    //     if(el) {
+    //         if(el.value=='') {
+                
+    //         } else {
+    //             updateKeySettings();
+    //         }
+    //     }
+    //     var ret = reload.apply(this);
+    //     return ret;
+    // }
+
+    function formatDate(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear();
+    }
+
+</script>

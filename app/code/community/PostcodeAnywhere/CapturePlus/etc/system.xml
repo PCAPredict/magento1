@@ -15,15 +15,17 @@
             <show_in_website>1</show_in_website>
             <show_in_store>1</show_in_store>
             <groups>
-                <settings translate="label">
-                    <label>Capture Plus Settings</label>
+                <login translate="label">
+                    <label>Log in to PCA Predict</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>1</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
-                    <expanded>1</expanded>
-                    <comment><![CDATA[<div style="margin-bottom:10px;">To set up a PCA Predict account, please visit our <a href="http://www.pcapredict.com/support/articles/article/address-finder-for-magento/" target="_blank" style="margin-left:0;">Getting Started</a> page</div>]]></comment>
+                    <expanded>0</expanded>
+                    <comment>
+                        <![CDATA[<div style="margin-bottom:10px;">To set up a PCA Predict account, please visit our <a href="http://www.pcapredict.com/support/articles/article/address-finder-for-magento/" target="_blank" style="margin-left:0;">Getting Started</a> page</div>]]>
+                    </comment>
                     <fields>
                         <account_code translate="label">
                             <label>Account code: </label>
@@ -31,30 +33,84 @@
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </account_code> 
-                        <custom_code translate="label">
-                          <label>Custom code: </label>
-                          <frontend_type>textarea</frontend_type>
-                          <comment><![CDATA[Paste any custom JavaScript code that you have in here]]></comment>
-                          <sort_order>2</sort_order>
-                          <show_in_default>1</show_in_default>
-                          <show_in_website>1</show_in_website>
-                          <show_in_store>1</show_in_store>
-                        </custom_code>
-                        <custom_mappings2 translate="label">
-                            <label>Custom mappings: </label>
-                            <frontend_type>textarea</frontend_type>
-                            <comment><![CDATA[Paste any custom field mappings that you have in here]]></comment>
+                            <show_in_store>0</show_in_store>
+                        </account_code>
+                        <pca_password>
+                            <label>Password: </label>
+                            <frontend_type>obscure</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </pca_password>
+                        <login_button translate="label">
+                            <label />
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>captureplus/adminhtml_system_config_form_button</frontend_model>
+                            <comment>
+                                <![CDATA[<span id="captureplus_login_feedback"></span>]]>
+                            </comment>
                             <sort_order>3</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </custom_mappings2>                    
+                        </login_button>
+						<license_key translate="label">
+							<label>License Key: </label>
+							<frontend_type>text</frontend_type>
+							<sort_order>4</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</license_key>
+						<mercury_token translate="label">
+							<label>Auth Token: </label>
+							<frontend_type>text</frontend_type>
+							<sort_order>5</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</mercury_token>
+                    </fields>
+                </login>
+            </groups>
+            <groups>
+                <settings translate="label">
+                    <label>Capture Plus Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <comment></comment>
+                    <fields>
+                        <custom_code translate="label">
+                            <label>Custom code: </label>
+                            <frontend_type>textarea</frontend_type>
+                            <comment>
+                                <![CDATA[Paste any custom JavaScript code that you have in here]]>
+                            </comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </custom_code>
+                        <custom_mappings2 translate="label">
+                            <label>Custom mappings: </label>
+                            <frontend_type>textarea</frontend_type>
+                            <comment>
+                                <![CDATA[Paste any custom field mappings that you have in here]]>
+                            </comment>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </custom_mappings2>
                     </fields>
                 </settings>
             </groups>
         </captureplus>
     </sections>
-
 </config>

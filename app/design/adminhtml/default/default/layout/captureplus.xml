@@ -19,6 +19,12 @@
     </reference>
   </adminhtml_customer_edit>
 
+  <adminhtml_system_config_edit>
+    <reference name="js">
+      <block type="captureplus/scriptconfig" name="captureplus_scriptconfig"  template="captureplus/scriptconfig.phtml" />
+    </reference>
+  </adminhtml_system_config_edit>
+
   <!-- Reload address capture on postback -->
   <adminhtml_sales_order_create_load_block_data>
     <reference name="content">

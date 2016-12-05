@@ -1,170 +1,165 @@
 <?php
-$pcaAccCode = Mage::getStoreConfig('captureplus/settings/account_code');
-$pcaCustomCode = Mage::getStoreConfig('captureplus/settings/custom_code');
-$pcaMappings = Mage::getStoreConfig('captureplus/settings/custom_mappings2');
-if($pcaAccCode) {
+
+    $pcaLicenseKey = Mage::getStoreConfig('captureplus/login/license_key');
+    $pcaAccCode = Mage::getStoreConfig('captureplus/login/account_code');
+
+    $pcaCustomCode = Mage::getStoreConfig('captureplus/settings/custom_code');
+    $pcaMappings = Mage::getStoreConfig('captureplus/settings/custom_mappings2');
+
+    if($pcaLicenseKey) {
 ?>
 
 <script type="text/javascript">
 
-if (!String.prototype.includes) {
-  String.prototype.includes = function(search, start) {
-    'use strict';
-    if (typeof start !== 'number') {
-      start = 0;
+    if (!String.prototype.includes) {
+        String.prototype.includes = function(search, start) {
+            'use strict';
+            if (typeof start !== 'number') {
+                start = 0;
+            }
+            
+            if (start + search.length > this.length) {
+                return false;
+            } else {
+                return this.indexOf(search, start) !== -1;
+            }
+        };
     }
-    
-    if (start + search.length > this.length) {
-      return false;
-    } else {
-      return this.indexOf(search, start) !== -1;
-    }
-  };
-}
 
-
-      (function (a, c, b, e) {
-    a[b] = a[b] || {}; a[b].initial = { accountCode: "<?php echo $pcaAccCode; ?>", host: "<?php echo $pcaAccCode; ?>.pcapredict.com" };
-    a[b].on = a[b].on || function () { (a[b].onq = a[b].onq || []).push(arguments) }; var d = c.createElement("script");
-    d.async = !0; d.src = e; c = c.getElementsByTagName("script")[0]; c.parentNode.insertBefore(d, c)
+    (function (a, c, b, e) {
+        a[b] = a[b] || {}; a[b].initial = { accountCode: "<?php echo $pcaAccCode; ?>", host: "<?php echo $pcaAccCode; ?>.pcapredict.com" };
+        a[b].on = a[b].on || function () { (a[b].onq = a[b].onq || []).push(arguments) }; var d = c.createElement("script");
+        d.async = !0; d.src = e; c = c.getElementsByTagName("script")[0]; c.parentNode.insertBefore(d, c)
     })(window, document, "pca", "//<?php echo $pcaAccCode; ?>.pcapredict.com/js/sensor.js");
 
-//<![CDATA[
+    //<![CDATA[
 
-      var shippingAddress = [];
-     var billingAddress = [];
-     var custInfoAddress = [];
-     var editOrderAddress = [];
+    var shippingAddress = [];
+    var billingAddress = [];
+    var custInfoAddress = [];
+    var editOrderAddress = [];
 
-     var supressCountry = false;
-     var shippingFirstTime = true;
-     var billingFirstTime = true;
+    var supressCountry = false;
+    var shippingFirstTime = true;
+    var billingFirstTime = true;
 
-     var pcaFirstLoad = false;
-     var shouldSetByIp = false;
+    var pcaFirstLoad = false;
+    var shouldSetByIp = false;
 
     (function() {
-     var magento = pca.magento = pca.magento || {};
+        var magento = pca.magento = pca.magento || {};
      
-     magento.controls = magento.controls || [];
-     var capturePlusFields = [];
+        magento.controls = magento.controls || [];
+        var capturePlusFields = [];
 
-     document.addEventListener('focus', function(e) {
+        document.addEventListener('focus', function(e) {
 
-        var backendShippingAddress = [];
-        var backendBillingAddress = [];
-        var backendCustomerInfoPartial = [];
-        var backendEditOrderAddress = [];
-        <?php echo $pcaMappings; ?>
+            var backendShippingAddress = [];
+            var backendBillingAddress = [];
+            var backendCustomerInfoPartial = [];
+            var backendEditOrderAddress = [];
+            <?php echo $pcaMappings; ?>
 
+            if (e.target.id.includes('shipping')) 
+            {
+                var contains = false;
 
-         if (e.target.id.includes('shipping')) {
-
-             var contains = false;
-
-             for (var i = 0; i < backendShippingAddress.length; i++) {
-                 if (backendShippingAddress[i].element === e.target.id) {
-                     contains = true;
-                     break;
-                 }
-             }
-
-             if(contains) {
-
-                 if (shippingFirstTime) {
-                 supressCountry = false;
+                for (var i = 0; i < backendShippingAddress.length; i++) {
+                    if (backendShippingAddress[i].element === e.target.id) {
+                        contains = true;
+                        break;
+                    }
                 }
-                shippingFirstTime = false;
 
-                 shippingAddress = backendShippingAddress;
-                 billingAddress.length = 0;
-                 custInfoAddress.length = 0;
-                 editOrderAddress.length = 0;
-                 pca.load();
-                 supressCountry = true;
-             }
+                if(contains) {
+                    if (shippingFirstTime) {
+                        supressCountry = false;
+                    }
+                    shippingFirstTime = false;
 
-         }
-
-         else if (e.target.id.includes('billing')) {
-
-             var contains = false;
-
-             for (var i = 0; i < backendBillingAddress.length; i++) {
-                 if (backendBillingAddress[i].element === e.target.id) {
-                     contains = true;
-                     break;
-                 }
-             }
-
-             if(contains) {
-                 if (billingFirstTime) {
-                 supressCountry = false;
+                    shippingAddress = backendShippingAddress;
+                    billingAddress.length = 0;
+                    custInfoAddress.length = 0;
+                    editOrderAddress.length = 0;
+                    pca.load();
+                    supressCountry = true;
                 }
-                billingFirstTime = false;
+            }
+            else if (e.target.id.includes('billing')) 
+            {
+                var contains = false;
 
-                 billingAddress = backendBillingAddress;
-                 shippingAddress.length = 0;
-                 custInfoAddress.length = 0;
-                 editOrderAddress.length = 0;
-                 pca.load();
-                 supressCountry = true;
-             }
-         }
+                for (var i = 0; i < backendBillingAddress.length; i++) {
+                    if (backendBillingAddress[i].element === e.target.id) {
+                        contains = true;
+                        break;
+                    }
+                }
 
-         else if (e.target.id.includes('_item')) {
+                if(contains) {
+                    if (billingFirstTime) {
+                        supressCountry = false;
+                    }
+                    billingFirstTime = false;
 
-             var contains = false;
+                    billingAddress = backendBillingAddress;
+                    shippingAddress.length = 0;
+                    custInfoAddress.length = 0;
+                    editOrderAddress.length = 0;
+                    pca.load();
+                    supressCountry = true;
+                }
+            }
+            else if (e.target.id.includes('_item')) 
+            {
+                var contains = false;
 
-             for (var i = 0; i < backendCustomerInfoPartial.length; i++) {
-                 if (e.target.id.includes(backendCustomerInfoPartial[i].element)) {
-                     contains = true;
-                     break;
-                 }
-             }
+                for (var i = 0; i < backendCustomerInfoPartial.length; i++) {
+                    if (e.target.id.includes(backendCustomerInfoPartial[i].element)) {
+                        contains = true;
+                        break;
+                    }
+                }
 
-             if (contains) {
+                if (contains) {
 
-                 var n = e.target.id[5];
+                    var n = e.target.id[5];
 
-                 for (var i = 0; i < backendCustomerInfoPartial.length; i++) {
-                     var tempField = backendCustomerInfoPartial[i].element;
-                     backendCustomerInfoPartial[i].element = "_item" + n + tempField;
-                 }
+                    for (var i = 0; i < backendCustomerInfoPartial.length; i++) {
+                        var tempField = backendCustomerInfoPartial[i].element;
+                        backendCustomerInfoPartial[i].element = "_item" + n + tempField;
+                    }
 
-                 custInfoAddress = backendCustomerInfoPartial;
-                 billingAddress.length = 0;
-                 shippingAddress.length = 0;
-                 editOrderAddress.length = 0;
-                 pca.load();
-                 supressCountry = true;
-             }
-         }
+                    custInfoAddress = backendCustomerInfoPartial;
+                    billingAddress.length = 0;
+                    shippingAddress.length = 0;
+                    editOrderAddress.length = 0;
+                    pca.load();
+                    supressCountry = true;
+                }
+            }
+            else 
+            {
+                var contains = false;
 
-         else {
+                for (var i = 0; i < backendEditOrderAddress.length; i++) {
+                    if (backendEditOrderAddress[i].element === e.target.id) {
+                        contains = true;
+                        break;
+                    }
+                }
 
-             var contains = false;
-
-             for (var i = 0; i < backendEditOrderAddress.length; i++) {
-                 if (backendEditOrderAddress[i].element === e.target.id) {
-                     contains = true;
-                     break;
-                 }
-             }
-
-             if (contains) {
-                editOrderAddress = backendEditOrderAddress;
-                billingAddress.length = 0;
-                shippingAddress.length = 0;
-                custInfoAddress.length = 0;
-                pca.load();
-             }
-         }
-        
-     }, true);
+                if (contains) {
+                    editOrderAddress = backendEditOrderAddress;
+                    billingAddress.length = 0;
+                    shippingAddress.length = 0;
+                    custInfoAddress.length = 0;
+                    pca.load();
+                }
+            }
+        }, true);
       
-      pca.on('data', function(source, key, address, variations) {
-            
+        pca.on('data', function(source, key, address, variations) {
             for (var i = 0; i < capturePlusFields.length; i++) {
                 var el = document.getElementById(capturePlusFields[i].element);
                 if (el) {
@@ -173,7 +168,7 @@ if (!String.prototype.includes) {
             }
         });
         
-            magento.canLoad = function() {
+        magento.canLoad = function() {
             // check to see if we have the form fields                    
             if (pca
                 && pca.platform
@@ -189,7 +184,6 @@ if (!String.prototype.includes) {
                 window.setTimeout(magento.canLoad, 500);
             }
         }
-        
         
         magento.onload = function(func) {
             // assign any pre-defined functions on 'window.onload' to a variable
@@ -256,7 +250,7 @@ if (!String.prototype.includes) {
             }
         });
 
-           pca.on("fields", function(service, id, fields) {       
+        pca.on("fields", function(service, id, fields) {       
             
             var mappings = [];
 
@@ -300,14 +294,13 @@ if (!String.prototype.includes) {
             }
         });
 
-
-            <?php
-    if($pcaCustomCode) {
-        echo $pcaCustomCode;
-    }
-    ?>
-        
+        <?php
+            if($pcaCustomCode) {
+                echo $pcaCustomCode;
+            }
+        ?> 
     })();
 //]]>
 </script>
-<?php }
+
+<?php } ?>
