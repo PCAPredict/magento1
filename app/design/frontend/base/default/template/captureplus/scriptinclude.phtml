@@ -367,7 +367,7 @@
                     
                     // magento does not have the country in it's list.
                     if (magentoCountriesAllowedListIso2.indexOf(countryCodeIso2.iso2) == -1) { //.indexOf() polyfill included for < IE9
-                        pcaCountriesAllowedListIso3.splice(index, 1);
+                        pcaCountriesAllowedListIso3.splice(pcaCountriesAllowedListIso3.indexOf(countryCode), 1);
                     }
 
                 }, this);
