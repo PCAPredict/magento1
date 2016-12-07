@@ -24,7 +24,6 @@
                     updateButton("Logout");
                     disableLoginFields(true);
                     loggedIn();
-                    //getKeySettings();
                 }
             }
         }
@@ -49,8 +48,6 @@
         if (getCollapsedState("captureplus_settings") == 0) {
             Fieldset.toggleCollapse('captureplus_settings', 'http://tmt2/index.php/admin/system_config/state/');
         }
-
-        //fetchPlanInfo(false);
     }
 
     function loggedIn() {
@@ -61,52 +58,7 @@
         if (getCollapsedState("captureplus_settings") == 1) {
             Fieldset.toggleCollapse('captureplus_settings', 'http://tmt2/index.php/admin/system_config/state/');
         }
-
-        //fetchPlanInfo(true);
     }
-
-    // function fetchPlanInfo(loggedIn) {
-    //     if(loggedIn) {
-    //         var auth = getAuth();
-    //         body = {};
-    //         fetch('https://app_api.pcapredict.com/api/accountplan', {
-    //             method: 'POST',
-    //             body: JSON.stringify(body),
-    //             headers: new Headers({
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': 'Basic ' + auth
-    //             })
-    //         }).then(function(response){
-    //             //get json
-    //             response.json().then(function(jsonObject){
-    //                 updatePlanInfoText(true, jsonObject);
-    //             }, function(){ /*TODO: Deal with error*/ });
-    //         }, function(){ /*TODO: Deal with error*/ })
-    //     }
-    //     else {
-    //         updatePlanInfoText(false, null);
-    //     }
-    // }
-
-    // function updatePlanInfoText(loggedIn, info) {
-    //     var el = document.getElementById("postcodeanywhere_planinfo");
-    //     if(el) {
-    //         if(loggedIn) {
-    //             var objDate = new Date(info.currentPlanRefreshDate);
-
-    //             var creditInfo = '';
-    //             if(info.currentPlanName == 'Free') {
-    //                 creditInfo = info.currentPlanCredits + ' US ';
-    //             } else {
-    //                 creditInfo = info.currentPlanCredits;
-    //             }
-                
-    //             el.innerHTML = '<p>You\'re currently on the ' + info.currentPlanName + ' plan, and get ' + creditInfo + ' address credits every ' + info.currentPlanPeriod +'.</p><p>Your credits will be refreshed on ' + formatDate(objDate) +'</p><p>Need more credits? <a href="https://www.pcapredict.com/" target="_blank">Visit our website for infomation on our paid plans</a></p>'
-    //         } else {
-    //             el.innerHTML = 'Please log into your PCA Predict account within Magento to view information about your plan.';
-    //         }
-    //     }
-    // }
 
     function updateLoginHeader(title) {
         var head = document.getElementById("captureplus_login-head");
@@ -157,147 +109,6 @@
             }
         }
     }
-
-    // function getKeySettings() {
-
-    //     var txtKey = document.getElementById('captureplus_login_license_key');
-    //     if(txtKey) {
-    //         var key = txtKey.value;
-    //         var auth = getAuth();
-    //         var body = {
-    //         "key": key
-    //         };
-    //         fetch('https://app_api.pcapredict.com/api/GetLicenseDetails', {
-    //             method: 'POST',
-    //             body: JSON.stringify(body),
-    //             headers: new Headers({
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': 'Basic ' + auth
-    //             })
-    //         }).then(function(response){
-    //             //get json
-    //             response.json().then(function(jsonObject){
-    //                 displayKeySettings(jsonObject);
-    //             }, function(){ /*TODO: Deal with error*/ });
-    //         }, function(){ /*TODO: Deal with error*/ })
-    //     }
-    // }
-
-    // function displayKeySettings(keySettings) {
-    //     var dailyLimitMatch = false;
-    //     var drpDailyLimit = document.getElementById("addresslookup_options_configure_daily_limit");
-    //     if (drpDailyLimit) {
-    //         for (var i = 0; i < drpDailyLimit.length; i++) {
-    //             if (keySettings.dailyLimit == drpDailyLimit.options[i].value) {
-    //                 dailyLimitMatch = true;
-    //                 drpDailyLimit.value = keySettings.dailyLimit;
-    //                 break;
-    //             }
-    //         }
-
-    //         if (!dailyLimitMatch) {
-    //             drpDailyLimit.value = 2000;
-    //         }
-    //     }
-
-    //     var userLimitMatch = false;
-    //     var drpUserLimit = document.getElementById("addresslookup_options_configure_user_limit");
-    //     if (drpUserLimit) {
-    //        for (var i = 0; i < drpUserLimit.length; i++) {
-    //            if (keySettings.userLimit == drpUserLimit.options[i].value) {
-    //                userLimitMatch = true;
-    //                drpUserLimit.value = keySettings.userLimit;
-    //                break;
-    //            }
-    //        } 
-
-    //        if(!userLimitMatch) {
-    //            drpUserLimit.value = 0;
-    //        }
-    //     }
-
-    //     var urls = '';
-    //     for (var i = 0; i < keySettings.urlRestrictions.length; i++) {
-    //         urls = urls + keySettings.urlRestrictions[i] + '\n';
-    //     }
-
-    //     var txtUrlRestrictions = document.getElementById("addresslookup_options_configure_url_restrictions");
-    //     if (txtUrlRestrictions) {
-    //         txtUrlRestrictions.value = urls;
-    //     }
-    // }
-
-    // function updateKeySettings() {
-    //     var auth = getAuth();
-    //     var body = buildKeyUpdateBody();
-    //     fetch('https://app_api.pcapredict.com/api/SetLicenseDetails', {
-    //         method: 'POST',
-    //         body: JSON.stringify(body),
-    //         headers: new Headers({
-    //             'Content-Type': 'application/json',
-    //             'Authorization': 'Basic ' + auth
-    //         })
-    //     }).then(function(response){
-    //         //get json
-    //         response.json().then(function(jsonObject){
-    //             displayKeySettings(jsonObject);
-    //         }, function(){ /*TODO: Deal with error*/ });
-    //     }, function(){ /*TODO: Deal with error*/ })
-    // }
-
-    // function buildKeyUpdateBody() {
-        
-    //     var txtKey = document.getElementById('addresslookup_options_login_license_key');
-    //     if(txtKey) {
-    //         var key = txtKey.value;
-    //     }
-
-    //     var drpDailyLimit = document.getElementById("addresslookup_options_configure_daily_limit");
-    //     if (drpDailyLimit) {
-    //         var dailyLimit =  drpDailyLimit.value;
-    //     }
-
-    //     var drpUserLimit = document.getElementById("addresslookup_options_configure_user_limit");
-    //     if (drpUserLimit) {
-    //         var userLimit = drpUserLimit.value;
-    //     }
-
-    //     var txtUrlRestrictions = document.getElementById("addresslookup_options_configure_url_restrictions");
-    //     if (txtUrlRestrictions) {
-    //         var rawUrls = txtUrlRestrictions.value.split('\n');;
-    //     }      
-
-    //     var urls = [];
-
-    //     for(var i = 0; i < rawUrls.length; i++) {
-    //         if (rawUrls[i].length > 0) {
-    //             urls.push(rawUrls[i]);
-    //         }
-    //     }
-
-    //     var body = {
-    //         "Key": key,
-    //         "DailyLimit": parseInt(dailyLimit),
-    //         "UserLimit": parseInt(userLimit),
-    //         "UrlRestrictions": urls
-    //     }
-
-    //     return body;
-    // }
-
-    // var reload = configForm.submit;
-    // configForm.submit = function() {
-    // var el = document.getElementById("captureplus_login_account_code");
-    //     if(el) {
-    //         if(el.value=='') {
-                
-    //         } else {
-    //             updateKeySettings();
-    //         }
-    //     }
-    //     var ret = reload.apply(this);
-    //     return ret;
-    // }
 
     function formatDate(date) {
         var hours = date.getHours();
