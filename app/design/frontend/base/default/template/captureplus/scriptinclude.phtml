@@ -37,12 +37,7 @@
     var shippingAddress =[];
     var billingAddress = [];
 
-    var supressCountry = false;
-    var shippingFirstTime = true;
-    var billingFirstTime = true;
-
-    var pcaFirstLoad = false;
-    var shouldSetByIp = false;
+    var countryBlockLookup = false;
 
     (function() {
         var magento = pca.magento = pca.magento || {};
@@ -67,15 +62,9 @@
                 }
 
                 if (contains) {
-                    if (shippingFirstTime) {
-                        supressCountry = false;
-                    }
-                    shippingFirstTime = false;
-
                     shippingAddress = checkoutShippingMappings;
                     billingAddress.length = 0;
                     pca.load();
-                    supressCountry = true;
                 } 
             }
             else if (e.target.id.includes('billing')) 
@@ -90,15 +79,9 @@
                 }
 
                 if (contains) {
-                    if (billingFirstTime) {
-                        supressCountry = false;
-                    }
-                    billingFirstTime = false;
-
                     billingAddress = checkoutBillingMappings;
                     shippingAddress.length = 0;
                     pca.load();
-                    supressCountry = true;
                 }
             }
         }, true);
@@ -204,54 +187,113 @@
 
         pca.on("options", function(service, id, options) {
 
-            // If the default country in magento is not set then let the tag perform as normal, so ip location bias will be on if set on the key.
-            // If the location bias is not set on the key then the default country should be used form the key instead (CHECK THIS!)
-            // If the default country in magento is set then ignore ip location bias and the country origin in the sensor will use the default country in magento.
-            var iso2CountryCode = <?php echo '"'.Mage::getStoreConfig('general/country/default').'";' ?>
+            //var magentoDefaultCountryIso2 = <?php echo '"'.Mage::getStoreConfig('general/country/default').'";' ?>
 
-            if (iso2CountryCode != ""){
-                options.setCountryByIP = false;
-                options.CapturePlusDefaultCountry = iso2CountryCode; // The CapturePlusDefaultCountry is a iso3 code but it seems to work taking an iso2 code as well.
+            var magentoCountriesAllowedListIso2Str = <?php echo '"'.Mage::getStoreConfig('general/country/allow').'";' ?>
+            
+            // TODO IF EMPTY
+            var magentoCountriesAllowedListIso2 = [];
+
+            if (magentoCountriesAllowedListIso2Str != null && magentoCountriesAllowedListIso2Str != "undefined" && magentoCountriesAllowedListIso2Str != "")
+            {
+                magentoCountriesAllowedListIso2 = magentoCountriesAllowedListIso2Str.split(",");
+            }
+            
+            var magentoCountriesAllowedListIso3 = [];
+
+            magentoCountriesAllowedListIso2.forEach(function(iso2Code) {
+                
+                // TODO POLYFILL
+                var found = pca.countries.find(function (element) {
+
+                    return element.iso2.toUpperCase() == iso2Code.toUpperCase();
+                });
+
+                magentoCountriesAllowedListIso3.push(found.iso3);
+            });
+
+            //var pcaDefaultCountryIso3 = options.CapturePlusDefaultCountry;
+
+            var pcaCountriesAllowedListIso3Str = options.CapturePlusCountryList;
+
+            // If a list of countries to allow is present in pca, then logic on this.
+            if (pcaCountriesAllowedListIso3Str != "") {
+
+                var pcaCountriesAllowedListIso3 = pcaCountriesAllowedListIso3Str.split(",");
+
+                // TODO POLYFILL. // For each pca country in the allowed list, check if it is in magento and if not then remove it.
+                pcaCountriesAllowedListIso3.forEach(function(countryCode) {
+                    
+                    // magento does not have the country in it's list. TODO POLYFILL.
+                    var index = magentoCountriesAllowedListIso3.indexOf(countryCode);
+
+                    if (index == -1) {
+                        pcaCountriesAllowedListIso3.splice(index, 1);
+                    }
+
+                }, this);
+
+                options.CapturePlusCountryList = pcaCountriesAllowedListIso3.toString();
+
+                // If we have now removed all the countries from the list then this means the pca sensor should not return results. 
+                // This is because the magento shop has not setup the countries that the pca settings allow. 
+                if (pcaCountriesAllowedListIso3.length == 0){
+
+                    // Remove the bindings so it does not perform any lookups
+                    //pca.platform.productList[id].PLATFORM_CAPTUREPLUS.bindings = [];
+
+                    // Alternative to commented out above.
+                    countryBlockLookup = true;
+                    pca.load();
+                }
+            } else {
+
+                // No countries in pca so this is saying allow all, then we restrict on what magento wants to restrict on instead.
+                options.CapturePlusCountryList = magentoCountriesAllowedListIso3.toString();
             }
         });
 
         pca.on("fields", function(service, id, fields) {       
             
-            var capturePlusMappings = [];
+            if (!countryBlockLookup){
 
-            if (shippingAddress.length > 0) {
-                capturePlusMappings = shippingAddress;
-            } else if (billingAddress.length > 0) {
-                capturePlusMappings = billingAddress;
-            }
+                var capturePlusMappings = [];
 
-            switch (service) {
-                case 'capture+':
-
-                var newCPMappings = [];
-                
-                if (capturePlusMappings.length > 0) {
-                    for (var i = 0; i < capturePlusMappings.length; i++) {
-                        newCPMappings.push(capturePlusMappings[i]);
-                    }
+                if (shippingAddress.length > 0) {
+                    capturePlusMappings = shippingAddress;
+                } else if (billingAddress.length > 0) {
+                    capturePlusMappings = billingAddress;
                 }
-                fields.length = 0;
-                for (var i = 0; i < newCPMappings.length; i++) {
-                    fields.push(newCPMappings[i]);
-                    var fieldAlreadyFound = false;
-                    for (var ii = 0; ii < capturePlusFields.length; ii++) {
-                        if (capturePlusFields[ii].element === newCPMappings[i].element) {
-                            fieldAlreadyFound = true;
-                            break;
+
+                switch (service) {
+                    case 'capture+':
+
+                    var newCPMappings = [];
+                    
+                    if (capturePlusMappings.length > 0) {
+                        for (var i = 0; i < capturePlusMappings.length; i++) {
+                            newCPMappings.push(capturePlusMappings[i]);
                         }
                     }
-                    if (fieldAlreadyFound != true) 
-                        capturePlusFields.push(newCPMappings[i]);
-                } 
-                break;
-
-                default: 
+                    fields.length = 0;
+                    for (var i = 0; i < newCPMappings.length; i++) {
+                        fields.push(newCPMappings[i]);
+                        var fieldAlreadyFound = false;
+                        for (var ii = 0; ii < capturePlusFields.length; ii++) {
+                            if (capturePlusFields[ii].element === newCPMappings[i].element) {
+                                fieldAlreadyFound = true;
+                                break;
+                            }
+                        }
+                        if (fieldAlreadyFound != true) 
+                            capturePlusFields.push(newCPMappings[i]);
+                    } 
                     break;
+
+                    default: 
+                        break;
+                }
+
             }
         });
 
