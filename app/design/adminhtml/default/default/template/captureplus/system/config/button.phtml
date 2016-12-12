@@ -468,6 +468,7 @@ function login() {
             "deviceDescription": deviceDesc,
             "deviceType": 1
         };
+        
         fetch('https://app_api.pcapredict.com/api/primaryaccountauthorisation', {
             method: 'POST',
             body: JSON.stringify(body),

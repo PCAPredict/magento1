@@ -348,12 +348,18 @@
             if (magentoCountriesAllowedListIso2Str != null && magentoCountriesAllowedListIso2Str != "undefined" && magentoCountriesAllowedListIso2Str != "")
             {
                 magentoCountriesAllowedListIso2 = magentoCountriesAllowedListIso2Str.split(",");
+            } else {
+
             }
 
-            var pcaCountriesAllowedListIso3Str = options.CapturePlusCountryList;
+            var pcaCountriesAllowedListIso3Str = null;
+
+            if (options.CapturePlusCountryList != "undefined") { // This property might not be initialised all the time, this is just to say we are forcing it here to represent an empty string so logic can resume as normal.
+                pcaCountriesAllowedListIso3Str = "";
+            }
 
             // If a list of countries to allow is present in pca, then logic on this.
-            if (pcaCountriesAllowedListIso3Str != "") {
+            if (pcaCountriesAllowedListIso3Str != null && pcaCountriesAllowedListIso3Str != "") {
 
                 var pcaCountriesAllowedListIso3 = pcaCountriesAllowedListIso3Str.split(",");
 
