@@ -445,36 +445,6 @@
 })(typeof self !== 'undefined' ? self : this);
 
 
-// findIndex polyfill
-if (!Array.prototype.findIndex) {
-  Object.defineProperty(Array.prototype, 'findIndex', {
-    value: function(predicate) {
-      'use strict';
-      if (this == null) {
-        throw new TypeError('Array.prototype.findIndex called on null or undefined');
-      }
-      if (typeof predicate !== 'function') {
-        throw new TypeError('predicate must be a function');
-      }
-      var list = Object(this);
-      var length = list.length >>> 0;
-      var thisArg = arguments[1];
-      var value;
-
-      for (var i = 0; i < length; i++) {
-        value = list[i];
-        if (predicate.call(thisArg, value, i, list)) {
-          return i;
-        }
-      }
-      return -1;
-    },
-    enumerable: false,
-    configurable: false,
-    writable: false
-  });
-}
-
 function login() {
 
   var btn = document.getElementById("postcodeanywherecaptureplus_button");
@@ -526,7 +496,8 @@ function login() {
             btn.disabled = false;
             displayErrorMsg();
         });
-        break;
+
+            break;
 
         case 'Logout':
 
@@ -539,11 +510,6 @@ function login() {
             if (password) {
               password.value = '';
             }
-
-            var passCont = document.getElementById("row_captureplus_login_pca_password");
-            if (passCont) {
-              passCont.style.visibility = "visible";
-            }
             
             var licenceKey = document.getElementById("captureplus_login_license_key");
             if (licenceKey) {
@@ -555,14 +521,14 @@ function login() {
               tokenField.value = '';
             }
 
-            var txtUrlRestrictions = document.getElementById("captureplus_settings_url_restrictions");
-            if (txtUrlRestrictions) {
-                txtUrlRestrictions.value = '';
-            }
+            // var txtUrlRestrictions = document.getElementById("addresslookup_options_configure_url_restrictions");
+            // if (txtUrlRestrictions) {
+            //     txtUrlRestrictions.value = '';
+            // }
+
             configForm.submit();
             
           break;
-
         default:
           break;
     }
@@ -571,9 +537,15 @@ function login() {
 
 function createKey(accountCode, response, callback) {
 
-    if(response.accounts && Object.keys(response.accounts).length > 0) { // if we have a response with a list of accounts then we are good to continue.
+  //var accountCode = "";
 
-      var auth = 'Basic ' + btoa(accountCode + ':' + response.token.token);
+    if(response.accounts && Object.keys(response.accounts).length > 0) { // if we have a response with a list of accounts then we are good to continue.
+        // for (var a in response.accounts) {
+        //   accountCode = a;
+        //   break;
+        // }
+
+      var auth = btoa(accountCode + ':' + response.token.token);
       var deviceDesc = window.location.hostname;
 
       var body = {
@@ -582,15 +554,15 @@ function createKey(accountCode, response, callback) {
         "IntegrationType": "Magento"
       };
       fetch('https://app_api.pcapredict.com/api/license', {
-            method: 'POST',
+                method: 'POST',
             body: JSON.stringify(body),
             headers: new Headers({
                 'Content-Type': 'application/json',
-                'Authorization': auth
+                'Authorization': 'Basic ' + auth
             })
       }).then(function (response){
         response.json().then(function(jsonObject) {
-          feedbackToUser(jsonObject, accountCode, callback);
+          feedbackToUser(jsonObject, accountCode);
         }, function() { callback(); displayErrorMsg();});
       }, function() { callback(); displayErrorMsg();})
     }
@@ -599,23 +571,22 @@ function createKey(accountCode, response, callback) {
     }
 }
 
-function feedbackToUser(response, accountCode, callback) {
+function feedbackToUser(response, accountCode) {
  if(response.licenceKey) {
-    displaySettings(response);
-    callback();
-
-    //configForm.submit();
-
+    populateFields(accountCode, response.licenceKey);
   } else {
     displayErrorMsg();
   }
 }
 
-function displaySettings(keySettings) {
+ function populateFields(accountCode,licenseKey) {
+  var el = document.getElementById("captureplus_login_account_code");
+  if(el) {
+    el.value = accountCode;
 
     var el2 = document.getElementById("captureplus_login_license_key");
     if (el2) {
-      el2.value = keySettings.licenceKey;
+      el2.value = licenseKey;
     }
 
     //Blank out the password field before save
@@ -623,28 +594,15 @@ function displaySettings(keySettings) {
     if (password) {
       password.value = '';
     }
-    var passCont = document.getElementById("row_captureplus_login_pca_password");
-    if (passCont) {
-      passCont.style.visibility = "hidden";
-    }
 
     //Save the config
     var feedback = document.getElementById("captureplus_login_feedback");
     if (feedback) {
       feedback.innerHTML = "Please wait..."
     }
-
-    // list the url list of restrictions.
-    var urls = '';
-    for (var i = 0; i < keySettings.urlRestrictions.length; i++) {
-        urls = urls + keySettings.urlRestrictions[i] + '\n';
-    }
-
-    var txtUrlRestrictions = document.getElementById("captureplus_settings_url_restrictions");
-    if (txtUrlRestrictions) {
-        txtUrlRestrictions.value = urls;
-    }
+    configForm.submit();
   }
+ }
 
  function displayErrorMsg() {
       var feedback = document.getElementById("captureplus_login_feedback");

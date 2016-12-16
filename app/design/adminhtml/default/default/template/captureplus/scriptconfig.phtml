@@ -6,7 +6,7 @@
     window.onload = function() {
         var el = document.getElementById("captureplus_login_license_key");
         if(el) {
-            hideFields(true);
+            hideFields();
             if(el.value=='') {
                 var feedback = document.getElementById("captureplus_login_feedback");
                 if (feedback) {
@@ -14,7 +14,7 @@
                     updateLoginHeader("Log in to PCA Predict");
                     updateButton("Login");
                     disableLoginFields(false);
-                    //notLoggedIn();
+                    notLoggedIn();
                 }
             } else {
                 var feedback = document.getElementById("captureplus_login_feedback");
@@ -23,51 +23,40 @@
                     updateLoginHeader("Your PCA Predict Account");
                     updateButton("Logout");
                     disableLoginFields(true);
-                    //loggedIn();
-                    getKeySettings();
+                    loggedIn();
                 }
             }
         }
     }
 
-    function hideFields(disableOnly) {
+    function hideFields() {
         var el2 = document.getElementById("row_captureplus_login_license_key");
         if(el2) {
-            if (!disableOnly){
-                el2.style.visibility = "hidden";
-            }
-            var el2Val = document.getElementById("captureplus_login_license_key");
-            if (el2Val) {
-                el2Val.setAttribute('disabled', '');
-            }
+            el2.style.visibility = "hidden";
         }
         var el3 = document.getElementById("row_captureplus_login_mercury_token");
         if(el3) {
-            if (!disableOnly){
-                el3.style.visibility = "hidden";
-            }
-            var ele3Val = document.getElementById("captureplus_login_mercury_token");
-            if (ele3Val) {
-                ele3Val.setAttribute('disabled', '');
-            }
+            el3.style.visibility = "hidden";
         }
     }
 
     function notLoggedIn() {
-        //Try and hide settings if the child is there and the parent is a "section-config" class.
-        var me = document.getElementById("captureplus_settings");
-        
-        if(me && (me.parentElement.className == "section-config" || me.parentElement.className == "section-config active")){
-            me.parentElement.style.visibility = "hidden";
+        //Expand login and collapse configure
+        if (getCollapsedState("captureplus_login") == 1) {
+            Fieldset.toggleCollapse('captureplus_login', 'http://tmt2/index.php/admin/system_config/state/');
+        }
+        if (getCollapsedState("captureplus_settings") == 0) {
+            Fieldset.toggleCollapse('captureplus_settings', 'http://tmt2/index.php/admin/system_config/state/');
         }
     }
 
     function loggedIn() {
-        //Try and hide settings if the child is there and the parent is a "section-config" class.
-        var me = document.getElementById("captureplus_settings");
-        
-        if(me && (me.parentElement.className == "section-config" || me.parentElement.className == "section-config active")){
-            me.parentElement.style.visibility = "visible";
+        //Collapse login and expand configure
+        if (getCollapsedState("captureplus_login") == 0) {
+            Fieldset.toggleCollapse('captureplus_login', 'http://tmt2/index.php/admin/system_config/state/');
+        }
+        if (getCollapsedState("captureplus_settings") == 1) {
+            Fieldset.toggleCollapse('captureplus_settings', 'http://tmt2/index.php/admin/system_config/state/');
         }
     }
 
@@ -99,17 +88,17 @@
         }
     }
 
-    // function getCollapsedState(containerId) {
-    //     var collapsed = 0;
+    function getCollapsedState(containerId) {
+        var collapsed = 0;
 
-    //     if ($(containerId + '-state')) {
-    //         collapsed = $(containerId + '-state').value == 1 ? 0 : 1;
-    //     } else {
-    //         collapsed = $(containerId + '-head').collapsed;
-    //     }
+        if ($(containerId + '-state')) {
+            collapsed = $(containerId + '-state').value == 1 ? 0 : 1;
+        } else {
+            collapsed = $(containerId + '-head').collapsed;
+        }
 
-    //     return collapsed;
-    // }
+        return collapsed;
+    }
 
     function getAuth() {
         var txtAccountCode = document.getElementById("captureplus_login_account_code");
@@ -119,115 +108,6 @@
                 return btoa(txtAccountCode.value + ':' + txtToken.value);
             }
         }
-    }
-
-    function getKeySettings() {
-
-        var txtKey = document.getElementById('captureplus_login_license_key');
-        if(txtKey) {
-            var key = txtKey.value;
-            var auth = getAuth();
-            var body = {
-            "key": key
-            };
-            fetch('https://app_api.pcapredict.com/api/GetLicenseDetails', {
-                method: 'POST',
-                body: JSON.stringify(body),
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + auth
-                })
-            }).then(function(response){
-                //get json
-                response.json().then(function(jsonObject){
-                    displayKeySettings(jsonObject);
-                }, function(){ /*TODO: Deal with error*/ });
-            }, function(){ /*TODO: Deal with error*/ })
-        }
-    }
-
-    function updateKeySettings() {
-
-        var auth = getAuth();
-
-        var body = buildKeyUpdateBody();
-
-        fetch('https://app_api.pcapredict.com/api/SetLicenseDetails', {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + auth
-            })
-        }).then(function(response){
-            //get json
-            response.json().then(function(jsonObject){
-                displayKeySettings(jsonObject);
-            }, function(){ /*TODO: Deal with error*/ });
-        }, function(){ /*TODO: Deal with error*/ })
-    }
-
-    function displayKeySettings(keySettings) {
-
-        var el2 = document.getElementById("captureplus_login_license_key");
-        if (el2) {
-            el2.value = keySettings.licenceKey;
-        }
-
-        // list the url list of restrictions.
-        var urls = '';
-        for (var i = 0; i < keySettings.urlRestrictions.length; i++) {
-            urls = urls + keySettings.urlRestrictions[i] + '\n';
-        }
-
-        var txtUrlRestrictions = document.getElementById("captureplus_settings_url_restrictions");
-        if (txtUrlRestrictions) {
-            txtUrlRestrictions.value = urls;
-        }
-    }
-
-    function buildKeyUpdateBody() {
-        
-        var txtKey = document.getElementById('captureplus_login_license_key');
-        if(txtKey) {
-            var key = txtKey.value;
-        }
-
-        var txtUrlRestrictions = document.getElementById("captureplus_settings_url_restrictions");
-        if (txtUrlRestrictions) {
-            var rawUrls = txtUrlRestrictions.value.split('\n');
-        }      
-
-        var urls = [];
-
-        for(var i = 0; i < rawUrls.length; i++) {
-            if (rawUrls[i].length > 0) {
-                urls.push(rawUrls[i]);
-            }
-        }
-
-        var body = {
-            "Key": key,
-            "UrlRestrictions": urls
-        }
-
-        return body;
-    }
-
-    var reload = configForm.submit;
-
-    configForm.submit = function() {
-        var el = document.getElementById("captureplus_login_license_key");
-
-        if(el) {
-            if(el.value=='') {
-                
-            } else {
-                updateKeySettings();
-            }
-        }
-        var ret = reload.apply(this);
-        return ret;
     }
 
     function formatDate(date) {
