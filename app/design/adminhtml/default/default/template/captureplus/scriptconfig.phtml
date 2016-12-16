@@ -4,6 +4,7 @@
 <script type="text/javascript">
 
     window.onload = function() {
+        
         var el = document.getElementById("captureplus_login_license_key");
         if(el) {
             hideFields(true);
@@ -28,6 +29,22 @@
                 }
             }
         }
+    }
+
+    var reload = configForm.submit;
+    configForm.submit = function() {
+
+        var el = document.getElementById("captureplus_login_license_key");
+
+        if(el) {
+            if(el.value=='') {
+                
+            } else {
+                updateKeySettings();
+            }
+        }
+        var ret = reload.apply(this);
+        return ret;
     }
 
     function hideFields(disableOnly) {
@@ -212,22 +229,6 @@
         }
 
         return body;
-    }
-
-    var reload = configForm.submit;
-
-    configForm.submit = function() {
-        var el = document.getElementById("captureplus_login_license_key");
-
-        if(el) {
-            if(el.value=='') {
-                
-            } else {
-                updateKeySettings();
-            }
-        }
-        var ret = reload.apply(this);
-        return ret;
     }
 
     function formatDate(date) {
