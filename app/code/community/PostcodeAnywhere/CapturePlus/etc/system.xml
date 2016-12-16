@@ -84,15 +84,28 @@
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <expanded>1</expanded>
-                    <comment></comment>
+                    <comment>
+                        <![CDATA[<div style="margin-bottom:10px;">If you need more configuration options, <a href="https://account.pcapredict.com" target="_blank" style="margin-left:0;">log into your account at pcapredict.com</a></div>]]>
+                    </comment>
                     <fields>
+						<url_restrictions translate="label">
+							<label>URL restrictions: </label>
+							<frontend_type>textarea</frontend_type>
+							<comment>
+								<![CDATA[You can restrict the service to specific URLs. Put each URL on a new line.]]>
+							</comment>
+							<sort_order>3</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</url_restrictions>
                         <custom_code translate="label">
                             <label>Custom code: </label>
                             <frontend_type>textarea</frontend_type>
                             <comment>
                                 <![CDATA[Paste any custom JavaScript code that you have in here]]>
                             </comment>
-                            <sort_order>1</sort_order>
+                            <sort_order>4</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -103,7 +116,7 @@
                             <comment>
                                 <![CDATA[Paste any custom field mappings that you have in here]]>
                             </comment>
-                            <sort_order>2</sort_order>
+                            <sort_order>5</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
