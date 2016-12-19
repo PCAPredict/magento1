@@ -101,7 +101,7 @@
                             <label>Custom mappings: </label>
                             <frontend_type>textarea</frontend_type>
                             <comment>
-                                <![CDATA[Paste any custom field mappings that you have in here]]>
+                                <![CDATA[Paste any custom field mappings that you have in here. Click <a onclick="resetMappings()">here</a> to revert to the default mappings.]]>
                             </comment>
                             <sort_order>2</sort_order>
                             <show_in_default>1</show_in_default>
