@@ -427,29 +427,27 @@
 
             if (id == "<?php echo $pcaLicenseKey; ?>" && !countryBlockLookup){   
 
-                var capturePlusMappings = [];
+                var mappings = [];
 
                 if (shippingAddress.length > 0) {
-                    capturePlusMappings = shippingAddress;
+                    mappings = shippingAddress;
                 } else if (billingAddress.length > 0) {
-                    capturePlusMappings = billingAddress;
+                    mappings = billingAddress;
                 }
 
                 switch (service) {
                     case 'capture+':
-                        if (!countryBlockLookup){
-                            var newCPMappings = [];
-                            for (var i = 0; i < capturePlusMappings.length; i++) {
-                                var mapping = capturePlusMappings[i];
-                                var pcaMatchedField = pca.getElement(mapping.element);
-                                if(pcaMatchedField){
-                                    newCPMappings.push(mapping)
-                                }
+                        var newCPMappings = [];
+                        for (var i = 0; i < mappings.length; i++) {
+                            var mapping = mappings[i];
+                            var pcaMatchedField = pca.getElement(mapping.element);
+                            if(pcaMatchedField){
+                                newCPMappings.push(mapping)
                             }
-                            fields.length = 0;
-                            for (var i = 0; i < newCPMappings.length; i++) {
-                                fields.push(newCPMappings[i]);
-                            }
+                        }
+                        fields.length = 0;
+                        for (var i = 0; i < newCPMappings.length; i++) {
+                            fields.push(newCPMappings[i]);
                         }
                         break;
 
