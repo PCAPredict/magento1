@@ -2,132 +2,53 @@
 ?>
 
 <script type="text/javascript">
-
+    
     window.onload = function() {
-        var el = document.getElementById("captureplus_login_license_key");
-        if(el) {
-            hideFields();
-        
-            if(el.value=='') {
-                var feedback = document.getElementById("captureplus_login_feedback");
-                if (feedback) {
-                    feedback.innerHTML = 'You are not logged in';
-                    updateLoginHeader("Log in to PCA Predict");
-                    updateButton("Login");
-                    disableLoginFields(false);
-                    notLoggedIn();
-                }
-            } else {
-                var feedback = document.getElementById("captureplus_login_feedback");
-                if (feedback) {
-                    feedback.innerHTML = 'You are logged in';
-                    updateLoginHeader("Your PCA Predict Account");
-                    updateButton("Logout");
-                    disableLoginFields(true);
-                    loggedIn();
-                }
-            }
-        }
-    }
+        var mercuryTokenElement = document.getElementById("captureplus_login_mercury_token");
+        var feedbackElement = document.getElementById("captureplus_login_feedback");
+        var headerElement = document.getElementById("captureplus_login-head");
+        var loginButtonElement = document.getElementById("postcodeanywherecaptureplus_button");
+        var accountCodeInputElement = document.getElementById("captureplus_login_account_code");
+        var passwordInputElement = document.getElementById("captureplus_login_pca_password");
+        var passwordInputRow = document.getElementById("row_captureplus_login_pca_password");
 
-    function hideFields() {
-        var el3 = document.getElementById("row_captureplus_login_mercury_token");
-        if(el3) {
-            el3.style.visibility = "hidden";
+        if(mercuryTokenElement) {
             
-            var ele3Val = document.getElementById("captureplus_login_mercury_token");
-            if (ele3Val) {
-                ele3Val.disabled = true; 
+            var loggedIn = false;
+            if(mercuryTokenElement.value != ''){
+                loggedIn = true;
+            }
+
+            mercuryTokenElement.disabled = loggedIn;
+
+            if(feedbackElement){
+                feedbackElement.innerHTML = loggedIn ? "You are logged in" : "You are not logged in"
+            }
+
+            
+            if(headerElement) {
+                headerElement.innerHTML = loggedIn ? "Your PCA Predict Account" : "Log in to PCA Predict";
+            }
+
+            if(loginButtonElement){
+                loginButtonElement.disabled = false;
+                loginButtonElement.title = loggedIn ? "Logout" : "Login";
+                loginButtonElement.innerHTML = "<span><span><span>" + (loggedIn ? "Logout" : "Login") + "</span></span></span>";
+            }
+
+            if(passwordInputRow){
+                passwordInputRow.style.display = loggedIn ? "none" : "";
+            }
+
+            if(passwordInputElement){
+                passwordInputElement.disabled = loggedIn;
+            }
+
+            if(accountCodeInputElement){
+                accountCodeInputElement.disabled = loggedIn;
             }
         }
     }
 
-    function notLoggedIn() {
-        //Try and hide settings if the child is there and the parent is a "section-config" class.
-        var me = document.getElementById("captureplus_settings");
-        
-        if(me && (me.parentElement.className == "section-config" || me.parentElement.className == "section-config active")){
-            me.parentElement.style.visibility = "hidden";
-        }
-    }
-
-    function loggedIn() {
-        //Try and hide settings if the child is there and the parent is a "section-config" class.
-        var me = document.getElementById("captureplus_settings");
-        
-        if(me && (me.parentElement.className == "section-config" || me.parentElement.className == "section-config active")){
-            me.parentElement.style.visibility = "visible";
-        }
-    }
-
-    function updateLoginHeader(title) {
-        var head = document.getElementById("captureplus_login-head");
-        if(head) {
-            head.innerHTML = title;
-        }
-    }
-
-    function updateButton(title) {
-        var btn = document.getElementById("postcodeanywherecaptureplus_button");
-        if(btn) {
-            btn.title = title;
-            btn.disabled = false;
-            btn.innerHTML = "<span><span><span>" + title + "</span></span></span>";
-        }
-    }
-
-    function disableLoginFields(disabled) {
-        var username = document.getElementById("captureplus_login_account_code");
-        if (username) {
-            username.disabled = disabled; 
-        }
-
-        var password = document.getElementById("captureplus_login_pca_password");
-        if (password) {
-            password.disabled = disabled;
-        }
-    }
-
-    function getCollapsedState(containerId) {
-        var collapsed = 0;
-
-        if ($(containerId + '-state')) {
-            collapsed = $(containerId + '-state').value == 1 ? 0 : 1;
-        } else {
-            collapsed = $(containerId + '-head').collapsed;
-        }
-
-        return collapsed;
-    }
-
-    function getAuth() {
-        var txtAccountCode = document.getElementById("captureplus_login_account_code");
-        if(txtAccountCode) {
-            var txtToken = document.getElementById("captureplus_login_mercury_token");
-            if(txtToken) {
-                return btoa(txtAccountCode.value + ':' + txtToken.value);
-            }
-        }
-    }
-
-    function formatDate(date) {
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var ampm = hours >= 12 ? 'pm' : 'am';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0'+minutes : minutes;
-        var strTime = hours + ':' + minutes + ' ' + ampm;
-        return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear();
-    }
-
-    function resetMappings() {
-
-        var mappingTextArea = document.getElementsByTagName("textarea");
-        if (mappingTextArea) {
-
-            mappingTextArea.namedItem("captureplus_settings_custom_mappings2").value = 'checkoutBillingMappings=[{element:"billing:company",field:"{Company}",mode:7},{element:"billing:street1",field:"{Line1}",mode:3},{element:"billing:street2",field:"{Line2}",mode:2},{element:"billing:city",field:"{City}",mode:2},{element:"billing:region",field:"{Province}",mode:2},{element:"billing:region_id",field:"{ProvinceName}",mode:2},{element:"billing:postcode",field:"{PostalCode}",mode:3},{element:"billing:country_id",field:"{CountryName}",mode:10}];checkoutShippingMappings=[{element:"shipping:company",field:"{Company}",mode:7},{element:"shipping:street1",field:"{Line1}",mode:3},{element:"shipping:street2",field:"{Line2}",mode:2},{element:"shipping:city",field:"{City}",mode:2},{element:"shipping:region",field:"{Province}",mode:2},{element:"shipping:region_id",field:"{ProvinceName}",mode:2},{element:"shipping:postcode",field:"{PostalCode}",mode:3},{element:"shipping:country_id",field:"{CountryName}",mode:10}];backendBillingAddress=[{element:"order-billing_address_company",field:"{Company}",mode:7},{element:"order-billing_address_street0",field:"{Line1}",mode:3},{element:"order-billing_address_street1",field:"{Line2}",mode:2},{element:"order-billing_address_city",field:"{City}",mode:2},{element:"order-billing_address_region",field:"{Province}",mode:2},{element:"order-billing_address_region_id",field:"{ProvinceName}",mode:2},{element:"order-billing_address_postcode",field:"{PostalCode}",mode:3},{element:"order-billing_address_country_id",field:"{CountryName}",mode:10}];backendShippingAddress=[{element:"order-shipping_address_company",field:"{Company}",mode:7},{element:"order-shipping_address_street0",field:"{Line1}",mode:3},{element:"order-shipping_address_street1",field:"{Line2}",mode:2},{element:"order-shipping_address_city",field:"{City}",mode:2},{element:"order-shipping_address_region",field:"{Province}",mode:2},{element:"order-shipping_address_region_id",field:"{ProvinceName}",mode:2},{element:"order-shipping_address_postcode",field:"{PostalCode}",mode:3},{element:"order-shipping_address_country_id",field:"{CountryName}",mode:10}];backendCustomerInfoPartial=[{element:"company",field:"{Company}",mode:7},{element:"street0",field:"{Line1}",mode:3},{element:"street1",field:"{Line2}",mode:2},{element:"city",field:"{City}",mode:2},{element:"region",field:"{Province}",mode:2},{element:"region_id",field:"{ProvinceName}",mode:2},{element:"postcode",field:"{PostalCode}",mode:3},{element:"country_id",field:"{CountryName}",mode:10}];backendEditOrderAddress=[{element:"company",field:"{Company}",mode:7},{element:"street0",field:"{Line1}",mode:3},{element:"street1",field:"{Line2}",mode:2},{element:"city",field:"{City}",mode:2},{element:"region",field:"{Province}",mode:2},{element:"region_id",field:"{ProvinceName}",mode:2},{element:"postcode",field:"{PostalCode}",mode:3},{element:"country_id",field:"{CountryName}",mode:10}];';
-        }
-    }
 
 </script>

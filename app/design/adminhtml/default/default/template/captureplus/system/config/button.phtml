@@ -446,165 +446,97 @@
 
 
 function login() {
+  var loaderIcon = document.getElementById('loading-mask');
+  if(loaderIcon){
+    loaderIcon.style.display = "block";
+  }
 
-  var btn = document.getElementById("postcodeanywherecaptureplus_button");
-
-  if (btn.disabled == false) {
-
-    btn.disabled = true;
-
-    var btnTitle = btn.title;
-    
-    switch (btnTitle) {
-      case 'Login':
-
-        var deviceDesc = 'Magento 1 | ' + window.location.hostname;
-
-        var accountCode = document.getElementById("captureplus_login_account_code").value;
-
-        var body = {
-            "accountcode": accountCode,
-            "password": document.getElementById("captureplus_login_pca_password").value,
-            "deviceDescription": deviceDesc,
-            "deviceType": 1
-        };
-        
-        fetch('https://app_api.pcapredict.com/api/primaryaccountauthorisation', {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            })
-        }).then(function(response) {
-            //get json
-            response.json().then(function(jsonObject) {
-              var tokenField = document.getElementById("captureplus_login_mercury_token");
-              if(tokenField) {
-                tokenField.value = jsonObject.token.token;
-              }
-              createKey(accountCode, jsonObject, function() { btn.disabled = false; });
-            }, function(){
-              btn.disabled = false;
-
-              var el = document.getElementById("captureplus_login_account_code");
-              if(el) {
-                  el.value = '';
-                  displayErrorMsg();
-              }
-            });
-        }, function(){ 
-            btn.disabled = false;
-            displayErrorMsg();
-        });
-
-            break;
-
-        case 'Logout':
-
-            var ac = document.getElementById("captureplus_login_account_code");
-            if(ac) {
-              ac.value = '';
-            }
-
-            var password = document.getElementById("captureplus_login_pca_password");
-            if (password) {
-              password.value = '';
-            }
-            
-            var licenceKey = document.getElementById("captureplus_login_license_key");
-            if (licenceKey) {
-              licenceKey.value = '';
-            }
-
+  document.getElementById("postcodeanywherecaptureplus_button").disabled = true;
+  var mercuryTokenElement = document.getElementById("captureplus_login_mercury_token");
+  var loggedIn = mercuryTokenElement.value != "";
+  
+  if(loggedIn){
+    var elements = [
+      "captureplus_login_account_code",
+      "captureplus_login_pca_password",
+      "captureplus_login_mercury_token"
+    ]
+    for(var e = 0; e < elements.length; e++){
+      var el = document.getElementById(elements[e]);
+      if(el){
+        el.disabled = false;
+        el.value = '';
+      }
+    }
+    configForm.submit();
+  }else{
+      var accountCode = document.getElementById("captureplus_login_account_code").value;
+      
+      fetch('https://app_api.pcapredict.com/api/primaryaccountauthorisation', {
+          method: 'POST',
+          body: JSON.stringify({
+              "accountcode": accountCode,
+              "password": document.getElementById("captureplus_login_pca_password").value,
+              "deviceDescription": 'Magento 1 | ' + window.location.hostname,
+              "deviceType": 1
+          }),
+          headers: new Headers({
+              'Content-Type': 'application/json'
+          })
+      }).then(function(response) {
+          //get json
+          response.json().then(function(jsonObject) {
             var tokenField = document.getElementById("captureplus_login_mercury_token");
             if(tokenField) {
-              tokenField.value = '';
+              tokenField.value = jsonObject.token.token;
             }
-
-            // var txtUrlRestrictions = document.getElementById("addresslookup_options_configure_url_restrictions");
-            // if (txtUrlRestrictions) {
-            //     txtUrlRestrictions.value = '';
-            // }
-
-            configForm.submit();
-            
-          break;
-        default:
-          break;
-    }
+            createKeys(accountCode, jsonObject).then(function(response){
+              if(response instanceof Array) {
+                //Blank out the password field before save
+                document.getElementById("captureplus_login_pca_password").value = '';
+                if(loaderIcon){
+                  loaderIcon.style.display = "none";
+                }
+                configForm.submit();
+              } else {
+                displayErrorMsg();
+              }
+            }, displayErrorMsg);
+          }, displayErrorMsg);
+      }, displayErrorMsg);
   }
+  
 }
 
-function createKey(accountCode, response, callback) {
+function createKeys(accountCode, response) {
 
-  //var accountCode = "";
-
+  return new Promise(function(res, rej){
     if(response.accounts && Object.keys(response.accounts).length > 0) { // if we have a response with a list of accounts then we are good to continue.
-        // for (var a in response.accounts) {
-        //   accountCode = a;
-        //   break;
-        // }
-
-      var auth = btoa(accountCode + ':' + response.token.token);
-      var deviceDesc = window.location.hostname;
-
-      var body = {
-        "KeyName": deviceDesc,
-        "BlockCreate": true,
-        "IntegrationType": "Magento"
-      };
-      fetch('https://app_api.pcapredict.com/api/license', {
-                method: 'POST',
-            body: JSON.stringify(body),
+          var auth = btoa(accountCode + ':' + response.token.token);
+          fetch('https://app_api.pcapredict.commercury/api/apps/magento/1/0.0.1/licences', {
+            method: 'POST',
             headers: new Headers({
                 'Content-Type': 'application/json',
                 'Authorization': 'Basic ' + auth
             })
-      }).then(function (response){
-        response.json().then(function(jsonObject) {
-          feedbackToUser(jsonObject, accountCode);
-        }, function() { callback(); displayErrorMsg();});
-      }, function() { callback(); displayErrorMsg();})
-    }
-    else {
-      callback();
-    }
+          }).then(function (response){
+            response.json().then(res, rej);
+          }, rej)
+        }
+        else {
+          res();
+        }
+  });
+    
 }
 
-function feedbackToUser(response, accountCode) {
- if(response.licenceKey) {
-    populateFields(accountCode, response.licenceKey);
-  } else {
-    displayErrorMsg();
-  }
-}
-
- function populateFields(accountCode,licenseKey) {
-  var el = document.getElementById("captureplus_login_account_code");
-  if(el) {
-    el.value = accountCode;
-
-    var el2 = document.getElementById("captureplus_login_license_key");
-    if (el2) {
-      el2.value = licenseKey;
-    }
-
-    //Blank out the password field before save
-    var password = document.getElementById("captureplus_login_pca_password");
-    if (password) {
-      password.value = '';
-    }
-
-    //Save the config
-    var feedback = document.getElementById("captureplus_login_feedback");
-    if (feedback) {
-      feedback.innerHTML = "Please wait..."
-    }
-    configForm.submit();
-  }
- }
 
  function displayErrorMsg() {
+      var loaderIcon = document.getElementById('loading-mask');
+      if(loaderIcon){
+        loaderIcon.style.display = "none";
+      }
+      document.getElementById("postcodeanywherecaptureplus_button").disabled = false;
       var feedback = document.getElementById("captureplus_login_feedback");
       if (feedback) {
         feedback.innerHTML = 'There has been an error logging in, please try again. If this problem continues, please <a href="https://www.pcapredict.com/Support" target="_blank">contact support</a>';
