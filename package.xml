@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <package>
-    <name>Postcode_Anywhere</name>
-    <version>3.2.0.0</version>
+    <name>UK_and_International_Address_AutoFill_from_Postcode_Anywhere</name>
+    <version>4.0.0.0</version>
     <stability>stable</stability>
     <license>GNU General Public License (GPL)</license>
     <channel>community</channel>
     <extends/>
     <summary>Capture+ is the latest in UK &amp; international address verification for the Magento ecommerce platform.</summary>
     <description>Capture+ is the latest in UK &amp; international address verification for the Magento ecommerce platform.</description>
-    <notes>- Additional support for One Page Checkout</notes>
+    <notes></notes>
     <authors>
         <author>
             <name>PCA Predict</name>
@@ -16,8 +16,8 @@
             <email>magneto@postcodeanywhere.co.uk</email>
         </author>
     </authors>
-    <date>2015-06-18</date>
-    <time>15:57:29</time>
+    <date>2017-02-27</date>
+    <time>15:00:00</time>
     <contents>
         <target name="magecommunity">
             <dir name="PostcodeAnywhere">
