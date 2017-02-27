@@ -67,6 +67,41 @@
                     </fields>
                 </login>
             </groups>
+            <groups>
+                <settings translate="label">
+                    <label>Advanced Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <comment></comment>
+                    <fields>
+                        <custom_code_frontend translate="label">
+                            <label>Frontend custom code: </label>
+                            <frontend_type>textarea</frontend_type>
+                            <comment>
+                                <![CDATA[Paste any custom JavaScript code that you have in here]]>
+                            </comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </custom_code_frontend>
+                        <custom_code_admin translate="label">
+                            <label>Admin custom code: </label>
+                            <frontend_type>textarea</frontend_type>
+                            <comment>
+                                <![CDATA[Paste any custom JavaScript code that you have in here]]>
+                            </comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </custom_code_admin>
+                    </fields>
+                </settings>
+            </groups>
         </captureplus>
     </sections>
 </config>

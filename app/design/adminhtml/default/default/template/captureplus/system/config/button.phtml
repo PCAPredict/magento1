@@ -513,7 +513,7 @@ function createKeys(accountCode, response) {
   return new Promise(function(res, rej){
     if(response.accounts && Object.keys(response.accounts).length > 0) { // if we have a response with a list of accounts then we are good to continue.
           var auth = btoa(accountCode + ':' + response.token.token);
-          fetch('https://app_api.pcapredict.commercury/api/apps/magento/1/0.0.1/licences', {
+          fetch('https://app_api.pcapredict.com/api/apps/magento/1/0.0.1/licences', {
             method: 'POST',
             headers: new Headers({
                 'Content-Type': 'application/json',
