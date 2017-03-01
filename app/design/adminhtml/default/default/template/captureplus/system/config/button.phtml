@@ -456,19 +456,21 @@ function login() {
   var loggedIn = mercuryTokenElement.value != "";
   
   if(loggedIn){
-    var elements = [
-      "captureplus_login_account_code",
-      "captureplus_login_pca_password",
-      "captureplus_login_mercury_token"
-    ]
-    for(var e = 0; e < elements.length; e++){
-      var el = document.getElementById(elements[e]);
-      if(el){
-        el.disabled = false;
-        el.value = '';
-      }
-    }
-    configForm.submit();
+    var accountCode = document.getElementById("captureplus_login_account_code").value;
+    var token = document.getElementById("captureplus_login_mercury_token").value;
+    //do logout
+    var auth = btoa(accountCode + ':' + token);
+    fetch('https://app_api.pcapredict.com/api/AuthToken', {
+      method: 'DELETE',
+      headers: new Headers({
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + auth
+      })
+    }).then(completeLogout, completeLogout);
+
+
+
+    
   }else{
       var accountCode = document.getElementById("captureplus_login_account_code").value;
       
@@ -506,6 +508,23 @@ function login() {
       }, displayErrorMsg);
   }
   
+}
+
+
+function completeLogout(){
+  var elements = [
+      "captureplus_login_account_code",
+      "captureplus_login_pca_password",
+      "captureplus_login_mercury_token"
+    ]
+    for(var e = 0; e < elements.length; e++){
+      var el = document.getElementById(elements[e]);
+      if(el){
+        el.disabled = false;
+        el.value = '';
+      }
+    }
+    configForm.submit();
 }
 
 function createKeys(accountCode, response) {
