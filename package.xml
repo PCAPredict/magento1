@@ -8,7 +8,10 @@
     <extends/>
     <summary>Capture+ is the latest in UK &amp; international address verification for the Magento ecommerce platform.</summary>
     <description>Capture+ is the latest in UK &amp; international address verification for the Magento ecommerce platform.</description>
-    <notes></notes>
+    <notes>
+        - New easy setup approach, simply login and start using the service
+        - Improved management of services. Services can now be centrally managed from your PCA Predict account section.
+    </notes>
     <authors>
         <author>
             <name>PCA Predict</name>
