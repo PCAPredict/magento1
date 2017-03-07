@@ -1,22 +1,21 @@
 <?xml version="1.0"?>
 <package>
-    <name>UK_and_International_Address_AutoFill_from_Postcode_Anywhere</name>
-    <version>4.0.0.0</version>
+    <name>Addressy_Address_Verification</name>
+    <version>2.0.0.0</version>
     <stability>stable</stability>
     <license>GNU General Public License (GPL)</license>
     <channel>community</channel>
     <extends/>
-    <summary>Capture+ is the latest in UK &amp; international address verification for the Magento ecommerce platform.</summary>
-    <description>Capture+ is the latest in UK &amp; international address verification for the Magento ecommerce platform.</description>
+    <summary>Eliminate checkout friction and ensure only complete and accurate address data enters your Magento checkout forms.</summary>
+    <description>Eliminate checkout friction and ensure only complete and accurate address data enters your Magento checkout forms.</description>
     <notes>
-        - New easy setup approach, simply login and start using the service
-        - Improved management of services. Services can now be centrally managed from your PCA Predict account section.
+        - Improved management of services. Services can now be centrally managed from your Addressy account section.
     </notes>
     <authors>
         <author>
-            <name>PCA Predict</name>
-            <user>admin</user>
-            <email>magneto@postcodeanywhere.co.uk</email>
+            <name>Addressy</name>
+			<user>admin</user>
+			<email>support@addressy.com</email>
         </author>
     </authors>
     <date>2017-02-27</date>

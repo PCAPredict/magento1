@@ -2,7 +2,7 @@
 <config>
     <tabs>
         <postcodeanywhere translate="label" module="captureplus">
-            <label>PCA Predict</label>
+            <label>Addressy</label>
             <sort_order>1000</sort_order>
         </postcodeanywhere>
     </tabs>
@@ -16,7 +16,7 @@
             <show_in_store>1</show_in_store>
             <groups>
                 <login translate="label">
-                    <label>Log in to PCA Predict</label>
+                    <label>Log in to Addressy</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>1</sort_order>
                     <show_in_default>1</show_in_default>
@@ -24,17 +24,17 @@
                     <show_in_store>1</show_in_store>
                     <expanded>0</expanded>
                     <comment>
-                        <![CDATA[<div style="margin-bottom:10px;">To set up a PCA Predict account, please visit our <a href="http://www.pcapredict.com/support/articles/article/address-finder-for-magento/" target="_blank" style="margin-left:0;">Getting Started</a> page</div>]]>
+                        <![CDATA[<div style="margin-bottom:10px;">To set up an Addressy account, please visit our <a href="https://www.addressy.com" target="_blank" style="margin-left:0;">website</a></div>]]>
                     </comment>
                     <fields>
-                        <account_code translate="label">
-                            <label>Account code: </label>
+                        <account_email translate="label">
+                            <label>Email: </label>
                             <frontend_type>text</frontend_type>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                        </account_code>
+                        </account_email>
                         <pca_password>
                             <label>Password: </label>
                             <frontend_type>obscure</frontend_type>
@@ -56,6 +56,14 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </login_button>
+                        <account_code translate="label">
+                            <label>Account code: </label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </account_code>
 						<mercury_token translate="label">
 							<label>Auth Token: </label>
 							<frontend_type>text</frontend_type>

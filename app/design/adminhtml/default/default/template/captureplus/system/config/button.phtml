@@ -472,15 +472,16 @@ function login() {
 
     
   }else{
-      var accountCode = document.getElementById("captureplus_login_account_code").value;
-      
-      fetch('https://app_api.pcapredict.com/api/primaryaccountauthorisation', {
+      var accountEmail = document.getElementById("captureplus_login_account_email").value;
+
+      fetch('https://app_api.pcapredict.com/api/AuthToken', {
           method: 'POST',
           body: JSON.stringify({
-              "accountcode": accountCode,
+              "email": accountEmail,
               "password": document.getElementById("captureplus_login_pca_password").value,
               "deviceDescription": 'Magento 1 | ' + window.location.hostname,
-              "deviceType": 1
+              "deviceType": 1,
+              "brand": "addressy"
           }),
           headers: new Headers({
               'Content-Type': 'application/json'
@@ -492,6 +493,20 @@ function login() {
             if(tokenField) {
               tokenField.value = jsonObject.token.token;
             }
+            
+            var accountCode;
+            if (jsonObject.accounts) {
+              for(var a in jsonObject.accounts) {
+                  accountCode = a.toUpperCase();
+                  break;
+              }
+            }
+
+            var accountCodeField = document.getElementById("captureplus_login_account_code");
+            if(accountCodeField) {
+              accountCodeField.value = accountCode;
+            }
+
             createKeys(accountCode, jsonObject).then(function(response){
               if(response instanceof Array) {
                 //Blank out the password field before save
