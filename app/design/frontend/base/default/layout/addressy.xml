@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<layout>
+
+  <default>
+    <reference name="head" after="-">
+      <block type="addresslookup/scriptinclude" name="addresslookup_scriptinclude"  template="addresslookup/scriptinclude.phtml" />
+    </reference>
+  </default>
+
+</layout>

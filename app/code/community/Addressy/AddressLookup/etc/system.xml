@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <tabs>
-        <postcodeanywhere translate="label" module="captureplus">
+        <addressy translate="label" module="addresslookup">
             <label>Addressy</label>
             <sort_order>1000</sort_order>
-        </postcodeanywhere>
+        </addressy>
     </tabs>
     <sections>
-        <captureplus translate="label" module="captureplus">
+        <addresslookup_options translate="label" module="addresslookup">
             <label>Settings</label>
-            <tab>postcodeanywhere</tab>
+            <tab>addressy</tab>
             <sort_order>1000</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
@@ -47,9 +47,9 @@
                         <login_button translate="label">
                             <label />
                             <frontend_type>button</frontend_type>
-                            <frontend_model>captureplus/adminhtml_system_config_form_button</frontend_model>
+                            <frontend_model>addresslookup/adminhtml_system_config_form_button</frontend_model>
                             <comment>
-                                <![CDATA[<span id="captureplus_login_feedback"></span>]]>
+                                <![CDATA[<span id="addressyaddresslookup_button"></span>]]>
                             </comment>
                             <sort_order>3</sort_order>
                             <show_in_default>1</show_in_default>
@@ -110,6 +110,6 @@
                     </fields>
                 </settings>
             </groups>
-        </captureplus>
+        </addresslookup_options>
     </sections>
 </config>

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <config>
     <modules>
-      <PostcodeAnywhere_CapturePlus>
+      <Addressy_AddressLookup>
             <active>true</active>
             <codePool>community</codePool>
-        </PostcodeAnywhere_CapturePlus>
+        </Addressy_AddressLookup>
     </modules>
 </config>

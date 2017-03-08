@@ -451,13 +451,13 @@ function login() {
     loaderIcon.style.display = "block";
   }
 
-  document.getElementById("postcodeanywherecaptureplus_button").disabled = true;
-  var mercuryTokenElement = document.getElementById("captureplus_login_mercury_token");
+  document.getElementById("addressyaddresslookup_button").disabled = true;
+  var mercuryTokenElement = document.getElementById("addresslookup_options_login_mercury_token");
   var loggedIn = mercuryTokenElement.value != "";
   
   if(loggedIn){
-    var accountCode = document.getElementById("captureplus_login_account_code").value;
-    var token = document.getElementById("captureplus_login_mercury_token").value;
+    var accountCode = document.getElementById("addresslookup_options_login_account_code").value;
+    var token = document.getElementById("addresslookup_options_login_mercury_token").value;
     //do logout
     var auth = btoa(accountCode + ':' + token);
     fetch('https://app_api.pcapredict.com/api/AuthToken', {
@@ -472,13 +472,13 @@ function login() {
 
     
   }else{
-      var accountEmail = document.getElementById("captureplus_login_account_email").value;
+      var accountEmail = document.getElementById("addresslookup_options_login_account_email").value;
 
       fetch('https://app_api.pcapredict.com/api/AuthToken', {
           method: 'POST',
           body: JSON.stringify({
               "email": accountEmail,
-              "password": document.getElementById("captureplus_login_pca_password").value,
+              "password": document.getElementById("addresslookup_options_login_pca_password").value,
               "deviceDescription": 'Magento 1 | ' + window.location.hostname,
               "deviceType": 1,
               "brand": "addressy"
@@ -489,7 +489,7 @@ function login() {
       }).then(function(response) {
           //get json
           response.json().then(function(jsonObject) {
-            var tokenField = document.getElementById("captureplus_login_mercury_token");
+            var tokenField = document.getElementById("addresslookup_options_login_mercury_token");
             if(tokenField) {
               tokenField.value = jsonObject.token.token;
             }
@@ -502,7 +502,7 @@ function login() {
               }
             }
 
-            var accountCodeField = document.getElementById("captureplus_login_account_code");
+            var accountCodeField = document.getElementById("addresslookup_options_login_account_code");
             if(accountCodeField) {
               accountCodeField.value = accountCode;
             }
@@ -510,7 +510,7 @@ function login() {
             createKeys(accountCode, jsonObject).then(function(response){
               if(response instanceof Array) {
                 //Blank out the password field before save
-                document.getElementById("captureplus_login_pca_password").value = '';
+                document.getElementById("addresslookup_options_login_pca_password").value = '';
                 if(loaderIcon){
                   loaderIcon.style.display = "none";
                 }
@@ -528,9 +528,9 @@ function login() {
 
 function completeLogout(){
   var elements = [
-      "captureplus_login_account_code",
-      "captureplus_login_pca_password",
-      "captureplus_login_mercury_token"
+      "addresslookup_options_login_account_code",
+      "addresslookup_options_login_pca_password",
+      "addresslookup_options_login_mercury_token"
     ]
     for(var e = 0; e < elements.length; e++){
       var el = document.getElementById(elements[e]);
@@ -570,8 +570,8 @@ function createKeys(accountCode, response) {
       if(loaderIcon){
         loaderIcon.style.display = "none";
       }
-      document.getElementById("postcodeanywherecaptureplus_button").disabled = false;
-      var feedback = document.getElementById("captureplus_login_feedback");
+      document.getElementById("addressyaddresslookup_button").disabled = false;
+      var feedback = document.getElementById("addresslookup_options_login_feedback");
       if (feedback) {
         feedback.innerHTML = 'There has been an error logging in, please try again. If this problem continues, please <a href="https://www.pcapredict.com/Support" target="_blank">contact support</a>';
       }
