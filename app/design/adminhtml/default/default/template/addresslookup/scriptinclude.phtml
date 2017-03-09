@@ -14,7 +14,7 @@
     a[b] = a[b] || {}; a[b].initial = { accountCode: "<?php echo $pcaAccCode; ?>", host: "<?php echo $pcaAccCode; ?>.addressy.com" };
     a[b].on = a[b].on || function () { (a[b].onq = a[b].onq || []).push(arguments) }; var d = c.createElement("script");
     d.async = !0; d.src = e; c = c.getElementsByTagName("script")[0]; c.parentNode.insertBefore(d, c)
-})(window, document, "pca", "//<?php echo $pcaAccCode; ?>.addressy.com/js/sensor.js");
+    })(window, document, "pca", "//<?php echo $pcaAccCode; ?>.addressy.com/js/sensor.js");
 
     if(typeof(customerAddresses) == "object" && typeof(customerAddresses.addNewAddress) == "function"){
         //this is the address book page
@@ -59,6 +59,10 @@
             control.load();
         });
     }
+
+    pca.on('ready', function () {
+	    pca.sourceString = 'AddressyMagento1Extension-v2.0.0.0';
+    });
 
     <?php
         if($pcaCustomCode) {
