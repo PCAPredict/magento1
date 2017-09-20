@@ -17,7 +17,9 @@
         d.async = !0; d.src = e; c = c.getElementsByTagName("script")[0]; c.parentNode.insertBefore(d, c)
     })(window, document, "pca", "//<?php echo $pcaAccCode; ?>.pcapredict.com/js/sensor.js");
 
-   
+    pca.on('ready', function() {
+        pca.sourceString = 'PCAPredictMagento1Extension-v4.0.0.1';
+    });
         
     <?php
         if($pcaCustomCode) {
